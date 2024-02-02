@@ -11,6 +11,6 @@ export default {
     // "*.json",
   ],
   build: {
-    outDir: "./",
+    outDir: "dist",
   },
 };
