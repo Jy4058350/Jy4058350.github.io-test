@@ -1,6 +1,5 @@
 export default {
   assetsInclude: [
-    "**/*.css",
     "**/*.js",
     "**/*.png",
     "**/*.jpg",
