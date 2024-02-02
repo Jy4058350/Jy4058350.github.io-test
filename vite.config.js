@@ -1,6 +1,6 @@
 export default {
-  base: "/jy4058350.github.io-test/",
-  // base: "/jy4058350.github.io/jy4058350.github.io-test/",
+  // base: "/jy4058350.github.io-test/",
+  base: "/jy4058350.github.io/jy4058350.github.io-test/",
   assetsInclude: [
     "**/*.js",
     "**/*.png",
