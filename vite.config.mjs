@@ -1,3 +1,4 @@
+console.log(`Running Node.js version: ${process.version}`);
 import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 
