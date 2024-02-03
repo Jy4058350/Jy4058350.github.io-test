@@ -1,3 +1,6 @@
+import { readFileSync, writeFileSync } from "fs";
+import { join } from "path";
+
 export default {
   base: "",
   assetsInclude: [
@@ -14,4 +17,18 @@ export default {
     outDir: "dist",
     assetsDir: "assets",
   },
+  plugins: [
+    {
+      name: "remove-leading-dot",
+      apply: "build",
+      writeBundle() {
+        const distDir = "./dist";
+        const htmlFile = join(distDir, "index.html");
+        let content = readFileSync(htmlFile, "utf-8");
+        content = content.replace(/="\.\/assets/g, '="assets/');
+        // content = content.replace(/="\/assets/g, '="assets');
+        writeFileSync(htmlFile, content);
+      },
+    },
+  ],
 };
