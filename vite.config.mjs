@@ -1,8 +1,10 @@
-console.log(`Running Node.js version: ${process.version}`);
+import { defineConfig } from "vite";
 import { readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 
-export default {
+console.log(`Running Node.js version: ${process.version}`);
+
+export default defineConfig({
   base: "",
   assetsInclude: [
     "**/*.js",
@@ -32,4 +34,4 @@ export default {
       },
     },
   ],
-};
+});
