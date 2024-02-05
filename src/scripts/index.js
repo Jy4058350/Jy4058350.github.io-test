@@ -1,4 +1,5 @@
-import "./style.css";
+import "../styles/style.scss";
+
 import * as THREE from "three";
 import WebGL from "three/addons/capabilities/WebGL.js";
 
@@ -29,8 +30,8 @@ if (WebGL.isWebGLAvailable()) {
   const line = new THREE.Line(geometry, material);
   scene.add( line );
   renderer.render( scene, camera );
-  
-  animate();
+
+  // animate();
 } else {
   const warning = WebGL.getWebGLErrorMessage();
   document.getElementById("container").appendChild(warning);
