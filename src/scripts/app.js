@@ -1,14 +1,10 @@
-import "../styles/style.scss";
-import { hellow } from "./test.js";
-import vertexshader from "./vertex.glsl";
-import fragmentshader from "./fragment.glsl";
-
-console.log(hellow);
-
 import * as THREE from "three";
 import WebGL from "three/addons/capabilities/WebGL.js";
 
-console.log("Hello Vite!");
+import vertexshader from "./vertex.glsl";
+import fragmentshader from "./fragment.glsl";
+
+
 if (WebGL.isWebGLAvailable()) {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(
