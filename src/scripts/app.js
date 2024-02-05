@@ -4,7 +4,6 @@ import WebGL from "three/addons/capabilities/WebGL.js";
 import vertexshader from "./vertex.glsl";
 import fragmentshader from "./fragment.glsl";
 
-
 if (WebGL.isWebGLAvailable()) {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(
@@ -16,6 +15,26 @@ if (WebGL.isWebGLAvailable()) {
 
   const renderer = new THREE.WebGLRenderer();
   renderer.setSize(window.innerWidth, window.innerHeight);
+
+  /* エラー時にシェーダの全体のコードを表示(three.js 0.152.0 対応) */
+  renderer.debug.onShaderError = (
+    gl,
+    program,
+    vertexShader,
+    fragmentShader
+  ) => {
+    const vertexShaderSource = gl.getShaderSource(vertexShader);
+    const fragmentShaderSource = gl.getShaderSource(fragmentShader);
+
+    console.groupCollapsed("vertexShader");
+    console.log(vertexShaderSource);
+    console.groupEnd();
+
+    console.groupCollapsed("fragmentShader");
+    console.log(fragmentShaderSource);
+    console.groupEnd();
+  };
+
   document.body.appendChild(renderer.domElement);
 
   const geometry = new THREE.BoxGeometry(1, 1, 1);
