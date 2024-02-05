@@ -1,4 +1,7 @@
 import "../styles/style.scss";
+import { hellow } from "./test.js";
+
+console.log(hellow);
 
 import * as THREE from "three";
 import WebGL from "three/addons/capabilities/WebGL.js";
@@ -28,8 +31,8 @@ if (WebGL.isWebGLAvailable()) {
 
   const geometry = new THREE.BufferGeometry().setFromPoints(points);
   const line = new THREE.Line(geometry, material);
-  scene.add( line );
-  renderer.render( scene, camera );
+  scene.add(line);
+  renderer.render(scene, camera);
 
   // animate();
 } else {
