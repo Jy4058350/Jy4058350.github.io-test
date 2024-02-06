@@ -1,1 +1,0 @@
-export const hellow = "hellow , world from test.js"

@@ -49,7 +49,7 @@ async function init() {
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     const material = new THREE.ShaderMaterial({
       uniforms: {
-        uTex: { value: await loadTex("../public/img/3.jpeg") },
+        uTex: { value: await loadTex("../public/img/yamadera.jpeg") },
       },
       vertexShader: vertexshader,
       fragmentShader: fragmentshader,
