@@ -1,74 +1,69 @@
 import * as THREE from "three";
 import WebGL from "three/addons/capabilities/WebGL.js";
 
-import vertexshader from "./vertex.glsl";
-import fragmentshader from "./fragment.glsl";
+// import vertexShader from "./vertex.glsl";
+// import fragmentShader from "./fragment.glsl";
 
-init();
+const world = {};
 
-async function init() {
+function init() {
   if (WebGL.isWebGLAvailable()) {
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
+    const canvas = document.querySelector("#canvas");
+    const canvasRect = canvas.getBoundingClientRect();
 
-    const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    world.renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    world.renderer.setSize(canvasRect.width, canvasRect.height, false);
+    world.renderer.setPixelRatio(window.devicePixelRatio);
+    world.renderer.setClearColor(0x000000, 0);
 
-    /* エラー時にシェーダの全体のコードを表示(three.js 0.152.0 対応) */
-    renderer.debug.onShaderError = (
-      gl,
-      program,
-      vertexShader,
-      fragmentShader
-    ) => {
-      const vertexShaderSource = gl.getShaderSource(vertexShader);
-      const fragmentShaderSource = gl.getShaderSource(fragmentShader);
+    world.scene = new THREE.Scene();
 
-      console.groupCollapsed("vertexShader");
-      console.log(vertexShaderSource);
-      console.groupEnd();
+    const cameraWidth = canvasRect.width;
+    const cameraHeight = canvasRect.height;
+    const near = 1500;
+    const far = 4000;
+    const aspect = cameraWidth / cameraHeight;
+    const cameraZ = 2500;
+    const radian = 2 * Math.atan(cameraHeight / 2 / cameraZ);
+    const fov = (180 * radian) / Math.PI;
+    world.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+    world.camera.position.z = cameraZ;
 
-      console.groupCollapsed("fragmentShader");
-      console.log(fragmentShaderSource);
-      console.groupEnd();
-    };
+    const els = document.querySelectorAll(`[data-webgl]`);
+    els.forEach((el) => {
+      const rect = el.getBoundingClientRect();
 
-    document.body.appendChild(renderer.domElement);
+      const geometry = new THREE.PlaneGeometry(rect.width, rect.height, 1, 1);
+      const material = new THREE.MeshBasicMaterial({
+        color: 0xff0000,
+        transparent: true,
+        opacity: 0.5,
+      });
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.position.z = 0;
 
-    async function loadTex(url) {
-      const texLoader = new THREE.TextureLoader();
-      const texture = await texLoader.loadAsync(url);
-      return texture;
-    }
+      const { x, y } = getWorldPosition(rect, canvasRect);
+      mesh.position.x = x;
+      mesh.position.y = y;
 
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.ShaderMaterial({
-      uniforms: {
-        uTex: { value: await loadTex("../public/img/yamadera.jpeg") },
-      },
-      vertexShader: vertexshader,
-      fragmentShader: fragmentshader,
-      transparent: true,
+      world.scene.add(mesh);
     });
-    const cube = new THREE.Mesh(geometry, material);
-    scene.add(cube);
 
-    camera.position.z = 5;
-
+    animate();
     function animate() {
       requestAnimationFrame(animate);
-      renderer.render(scene, camera);
-      cube.rotation.x += 0.01;
-      cube.rotation.y += 0.01;
+      world.renderer.render(world.scene, world.camera);
     }
-    animate();
   } else {
     const warning = WebGL.getWebGLErrorMessage();
     document.getElementById("container").appendChild(warning);
   }
 }
+
+function getWorldPosition(rect, canvasRect) {
+  const x = rect.left + rect.width / 2 - canvasRect.width / 2;
+  const y = -rect.top - rect.height / 2 + canvasRect.height / 2;
+  return { x, y };
+}
+
+export { init };

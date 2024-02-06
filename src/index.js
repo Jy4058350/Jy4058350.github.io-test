@@ -1,2 +1,4 @@
 import "./styles/style.scss";
-import "./scripts/app.js";
+import { init } from "./scripts/app";
+
+init();
