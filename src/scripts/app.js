@@ -32,6 +32,7 @@ function init() {
     const els = document.querySelectorAll(`[data-webgl]`);
     els.forEach((el) => {
       const rect = el.getBoundingClientRect();
+      console.log(el);
 
       const geometry = new THREE.PlaneGeometry(rect.width, rect.height, 1, 1);
       const material = new THREE.MeshBasicMaterial({
@@ -47,6 +48,7 @@ function init() {
       mesh.position.y = y;
 
       world.scene.add(mesh);
+      console.log(mesh);
     });
 
     animate();
