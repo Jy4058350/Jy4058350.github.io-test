@@ -5,12 +5,45 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Deploy check</title>
-    <script type="module" crossorigin src="./assets/index-uNzP59JH.js"></script>
+    <script type="module" crossorigin src="./assets/index-sO8xUZQZ.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-qKWFNTDr.css">
   </head>
   <body>
-    <h1>Deploy check</h1>
-    <p>Yamadera</p>
-    <img src="./assets/yamadera-7RzTCJzq.jpeg" alt="">
+    <div data-webgl></div>
+    <section data-webgl></section>
+    <img data-webgl src="./assets/yamadera-7RzTCJzq.jpeg" />
+    <style>
+      [data-webgl] {
+        background: rgb(136, 180, 59);
+        opacity: 0.3;
+      }
+
+      div {
+        margin-left: 100px;
+        margin-top: 100px;
+        width: 100px;
+        height: 100px;
+      }
+
+      section {
+        margin-left: 300px;
+        margin-top: 50px;
+        width: 200px;
+        height: 100px;
+      }
+
+      img {
+        position: absolute;
+        right: 100px;
+        width: 300px;
+        top: 10px;
+      }
+
+      body {
+        height: 200vh;
+      }
+    </style>
+
+    <canvas id="canvas"></canvas>
   </body>
 </html>
