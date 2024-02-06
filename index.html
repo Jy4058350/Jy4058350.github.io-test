@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="module" src="./index.js"></script>
+    <title>Build App</title>
+  </head>
+  <body>
+    <div data-webgl></div>
+    <section data-webgl></section>
+    <img data-webgl src="./public/img/3.jpeg" />
+    <style>
+      [data-webgl] {
+        background: rgb(136, 180, 59);
+        opacity: 0.3;
+      }
+
+      div {
+        margin-left: 100px;
+        margin-top: 100px;
+        width: 100px;
+        height: 100px;
+      }
+
+      section {
+        margin-left: 300px;
+        margin-top: 50px;
+        width: 200px;
+        height: 100px;
+      }
+
+      img {
+        position: absolute;
+        right: 100px;
+        width: 300px;
+        top: 10px;
+      }
+
+      body {
+        height: 200vh;
+      }
+    </style>
+
+    <canvas id="canvas"></canvas>
+  </body>
+</html>
