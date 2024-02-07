@@ -1,3 +1,8 @@
+varying vec2 vUv;
+uniform vec2 uMouse;
+uniform float uHover;
+
 void main() {
-  gl_FragColor = vec4(0.93, 0.27, 0.16, 1.0);
+  vec2 mouse = step(uMouse, vUv);
+  gl_FragColor = vec4(mouse, uHover, 1.);
 }

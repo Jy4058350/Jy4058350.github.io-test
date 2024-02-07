@@ -7,6 +7,10 @@
   z-index: -1;
 }
 
+#pageContainer {
+  height: 100vh;
+}
+
 body {
   background-color: white;
   font-family: Arial, sans-serif;
@@ -24,7 +28,3 @@ img {
   max-width: 100%;
   height: auto;
 }
-
-// body {
-//   margin: 0;
-// }
