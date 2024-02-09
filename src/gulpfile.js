@@ -7,6 +7,6 @@ console.log("replace", replace);
 gulp.task("replace", function () {
   return gulp
     .src(["./*.html"])
-    .pipe(replace("./public/img/", "./assets/"))
+    .pipe(replace("./public/img/", "./img/"))
     .pipe(gulp.dest("./dist"));
 });
