@@ -4,39 +4,67 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="module" src="./index.js"></script>
-    <title>Mouse</title>
+    <script type="module" src="./scripts/index.js"></script>
+    <title>Loading_Process</title>
+    <link rel="stylesheet" href="./styles/loader.scss" />
   </head>
   <body>
-    <div id="pageContainer">
-      <img data-webgl src="./public/img/yamadera.jpeg" />
-      <div class="div1" data-webgl></div>
-      <section data-webgl></section>
-      <style>
-        [data-webgl] {
-          background: rgb(136, 180, 59);
-          opacity: 0.3;
-        }
-
-        .div1 {
-          margin-left: 100px;
-          margin-top: 50px;
-          width: 100px;
-          height: 100px;
-        }
-
-        section {
-          margin-left: 300px;
-          margin-top: 500px;
-          width: 200px;
-          height: 100px;
-        }
-
-        img {
-          margin-top: 500px;
-          width: 100%;
-        }
-      </style>
+    <div id="loader" class="loader">
+      <div class="loader-inner">
+        <div class="loader-rect">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <span id="loader-percent" class="loader-percent">0%</span>
+      </div>
+    </div>
+    <div id="global-container">
+      <div id="page-container">
+        <div
+          id="div1"
+          data-webgl
+          data-tex-1="/movie/fresnel_back.webm"
+          data-tex-2="/movie/fresnel_back.mov"
+        ></div>
+        <video data-webgl data-tex-1="/movie/beach.mp4"></video>
+        <img
+          data-webgl
+          data-tex-1="./public/img/yamadera.jpeg"
+          src="./public/img/yamadera.jpeg"
+          data-tex-2="./public/img/sakuramich.jpeg"
+          src="./public/img/sakuramich.jpeg"
+        />
+        <img
+          data-webgl
+          data-tex-1="./public/img/yamadera.jpeg"
+          src="./public/img/yamadera.jpeg"
+          data-tex-2="./public/img/sakuramich.jpeg"
+          src="./public/img/sakuramich.jpeg"
+        />
+        <img
+          data-webgl
+          data-tex-1="./public/img/yamadera.jpeg"
+          src="./public/img/yamadera.jpeg"
+          data-tex-2="./public/img/sakuramich.jpeg"
+          src="./public/img/sakuramich.jpeg"
+        />
+        <style>
+          [data-webgl] {
+            opacity: 0.3;
+          }
+          #div1 {
+            width: 800px;
+            height: 200px;
+          }
+          img {
+            margin-top: 100px;
+            width: 80%;
+          }
+        </style>
+      </div>
     </div>
 
     <canvas id="canvas"></canvas>
