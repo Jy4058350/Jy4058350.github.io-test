@@ -1,7 +1,8 @@
-import image1 from "../../assets/ima/sakuramich.jpg";
-import image2 from "../../assets/ima/yamadera.jpg";
+import image1 from "../../../dist/img/sakuramich.jpeg";
+import image2 from "../../../dist/img/yamadera.jpeg";
 
-console.log("manage assets called");
-// const imgElement = document.querySelector('.img[data-webgl]');
-// imgElement.src = image1;
-// imgElement.dataset.tex2 = image2;
+export default function init() {
+  const divElement = document.querySelector("[data-webgl]");
+  console.log("divElement", divElement);
+  console.log(divElement.dataset.tex-1);
+}
