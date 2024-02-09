@@ -1,7 +1,8 @@
 // gulpfile.js
-const gulp = require("gulp");
-const replace = require("gulp-replace");
+import gulp from "gulp";
+import replace from "gulp-replace";
 console.log("gulp", gulp);
+console.log("replace", replace);
 
 // gulp.task("replace", function () {
 //   return gulp
