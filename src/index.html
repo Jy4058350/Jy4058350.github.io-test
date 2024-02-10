@@ -4,12 +4,48 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Build App</title>
+    <script type="module" src="./scripts/index.js"></script>
+    <title>Loading_Process</title>
+    <link rel="stylesheet" href="./styles/loader.scss" />
   </head>
   <body>
-    <h1>Hello My App!</h1>
-    <p>init vite</p>
-    <img src="public/img/3.jpeg" alt="">
-    <script type="module" src="/index.js"></script>
+    <div id="loader" class="loader">
+      <div class="loader-inner">
+        <div class="loader-rect">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <span id="loader-percent" class="loader-percent">0%</span>
+      </div>
+    </div>
+    <div id="global-container">
+      <div id="page-container">
+        <img
+          data-webgl
+          data-tex-1="./img/yamadera.jpeg"
+          src="./public/img/yamadera.jpeg"
+          data-tex-2="./img/sakuramich.jpeg"
+          src="./public/img/sakuramich.jpeg"
+        />
+        <style>
+          [data-webgl] {
+            opacity: 0.3;
+          }
+          #div1 {
+            width: 800px;
+            height: 200px;
+          }
+          img {
+            margin-top: 100px;
+            width: 80%;
+          }
+        </style>
+      </div>
+    </div>
+
+    <canvas id="canvas"></canvas>
   </body>
 </html>
