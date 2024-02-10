@@ -14,7 +14,8 @@
     "preview": "vite preview",
     "deploy": "gh-pages -d dist",
     "sass": "sass style.scss:style.css",
-    "replace": "gulp replace"
+    "replace": "gulp replace",
+    "test": ""
   },
   "devDependencies": {
     "gh-pages": "^6.1.1",
