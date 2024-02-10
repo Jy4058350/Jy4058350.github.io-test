@@ -47,9 +47,13 @@ async function loadAllAssets() {
   textureCache.forEach((_, url) => {
     let prms = null;
     const loadFn = /\.(mp4|webm|mov)$/.test(url) ? loadVideo : loadImg;
-    prms = loadFn(url).then((tex) => {
-      textureCache.set(url, tex);
-    });
+        prms = loadFn(url)
+      .then((tex) => {
+        textureCache.set(url, tex);
+      })
+      .catch(() => {
+        console.error("Failed to load Media: ", url);
+      });
 
     texPrms.push(prms);
   });
