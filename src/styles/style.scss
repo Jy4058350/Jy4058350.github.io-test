@@ -32,6 +32,7 @@ html {
 
 body {
   margin: 0;
+  background-color: gray;
 }
 
 main {
@@ -253,6 +254,16 @@ button:-moz-focusring,
 * Main header 8073
 * ----------------------------------------------------------------------------------------------
 */
+
+.supports-sticky .Search[aria-hidden="true"] + .Header--transparent .Header__Icon svg {
+  filter: drop-shadow(0 1px rgba(0, 0, 0, 0.25));
+}
+
+.Header__Icon .Icon--nav {
+  width: 20px;
+  height: 15px;
+}
+
 @media screen and (min-width: 641px) {
   .Header__Wrapper {
     padding: 18px 30px;

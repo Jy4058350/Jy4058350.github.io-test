@@ -1,21 +1,122 @@
-import { config } from "../scripts/helper/config.js";
+import { config, isDesktopView } from "../scripts/helper";
+
+const BREAKPOINT_WIDTH = config.page.breakpoint;
+const DEBOUNCE_TIME = config.time.debounce;
 const SELECTOR = config.selector;
-const IMAGE_SELECTOR = config.imageSelector;
+const LOGOE_SELECTOR = config.logoeSelector;
 const BUTTON_SELECTOR = config.buttonSelector;
-const SVG_ELEMENT = config.svgElement;
+const SVG_CART = config.svgCart;
+
+// Check if the current view is desktop or not using the helper function
+isDesktopView(BREAKPOINT_WIDTH);
 
 export default (function () {
   adjustContainer();
-  createIcon(config);
-  adjustElements();
+  const iconConfig = isDesktopView() ? config.tabletAndUp : config.phone;
+  createIcon(iconConfig);
+
+  const svgPath = isDesktopView() ? config.svg.cartDesktop : config.svg.cartPhone;
+  createCart(svgPath);
 })();
 
-function createIcon({ viewBox, width, height, rectWidth, rectHeight }) {
+async function getSVG(path) {
+  try {
+    const response = await fetch(`../svg/${path}`);
+    // Add error handling if response is not ok
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.text();
+
+    const parser = new DOMParser();
+    const svgDoc = parser.parseFromString(data, "image/svg+xml");
+    const svgElement = svgDoc.querySelector("svg");
+
+    if (!svgElement) {
+      throw new Error(`No SVG element found in the response for path: ${path}`);
+    }
+    // Set dummy values if height or width are not set
+    if (!svgElement.getAttribute("height")) {
+      svgElement.setAttribute("height", "20");
+    }
+    if (!svgElement.getAttribute("width")) {
+      svgElement.setAttribute("width", "20");
+    }
+
+    const pathElements = svgElement.querySelectorAll("path");
+    pathElements.forEach((pathElement) => {
+      pathElement.setAttribute("fill", "white");
+      pathElement.setAttribute("stroke", "white");
+      pathElement.setAttribute("stroke-width", "0.05");
+    });
+    return svgElement;
+  } catch (error) {
+    // Add point of failure to error message
+    console.error("Error in getSVG:", error);
+  }
+}
+
+async function createCart(svgPath) {
+  try {
+    const svgParent = document.querySelector(`.${SVG_CART}`);
+    // Add error handling if no element is found
+    if (!svgParent) {
+      throw new Error(`No element found with class: ${SVG_CART}`);
+    }
+
+    clearElementChildren(svgParent);
+
+    const svgElement = await getSVG(svgPath);
+    if (!svgElement) {
+      throw new Error(`No SVG element created for path: ${svgPath}`);
+    }
+    svgParent.appendChild(svgElement);
+    if (window.innerWidth >= BREAKPOINT_WIDTH) {
+      svgElement.classList.add("hidden-phone");
+    } else {
+      svgElement.classList.add("hidden-tablet-and-up");
+    }
+
+    const btnParent = document.querySelector(`.${BUTTON_SELECTOR}`);
+    const btnParentHeight = btnParent.offsetHeight;
+    adjustElementToHeight(svgElement, btnParentHeight);
+
+    adjustElements();
+  } catch (error) {
+    // Add point of failure to error message
+    console.error("Error in createCart:", error);
+  }
+}
+
+// Add event listener to window resize
+let resizeTimeout;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(async () => {
+    console.log("resize");
+    const typeDevice = window.innerWidth >= BREAKPOINT_WIDTH ? config.tabletAndUp : config.phone;
+    createIcon(typeDevice);
+    const svgPath = window.innerWidth >= BREAKPOINT_WIDTH ? config.svg.cartDesktop : config.svg.cartPhone;
+    await createCart(svgPath);
+
+    adjustElements();
+  }, DEBOUNCE_TIME);
+});
+
+function clearElementChildren(element) {
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
+  }
+}
+
+function createSvg(viewBox, width, height) {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.setAttribute("viewBox", viewBox);
   svg.setAttribute("width", width);
   svg.setAttribute("height", height);
-
+  return svg;
+}
+function createRectangles(svg, height, rectWidth, rectHeight) {
   for (let i = 0; i < 3; i++) {
     const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
     rect.setAttribute("width", rectWidth);
@@ -23,11 +124,28 @@ function createIcon({ viewBox, width, height, rectWidth, rectHeight }) {
     rect.setAttribute("y", i * parseInt(height));
     svg.appendChild(rect);
   }
-  const iconWrapper = document.querySelector(SELECTOR);
+}
 
-  iconWrapper.appendChild(svg);
+// Code duplication here so separate function to create svg with rectangles
+function createSvgWithRectangles({ viewBox, width, height, rectWidth, rectHeight }) {
+  const svg = createSvg(viewBox, width, height);
+  createRectangles(svg, height, rectWidth, rectHeight);
+  return svg;
+}
+
+function createIcon(config) {
+  const btn = document.querySelector(SELECTOR);
+  clearElementChildren(btn);
+
+  const phoneSvg = createSvgWithRectangles(config);
+  const tabletAndUpSvg = createSvgWithRectangles(config);
+
+  btn.appendChild(phoneSvg);
+  btn.appendChild(tabletAndUpSvg);
+  tabletAndUpSvg.style.display = "none";
 }
 function adjustParentSize(element, newWidth, newHeight) {
+  if (!element) return;
   const parent = element.parentNode;
   parent.style.height = `${newHeight}px`;
   parent.style.width = `${newWidth}px`;
@@ -39,20 +157,34 @@ function adjustElementSize(element, newWidth, newHeight) {
 }
 
 function adjustElementToHeight(element, targetHeight) {
-  const aspectRatio = element.offsetWidth / element.offsetHeight;
-  const newWidth = aspectRatio * targetHeight;
-  adjustElementSize(element, newWidth, targetHeight);
+  if (!element) {
+    console.log("No element provided to adjustElementToHeight");
+    return;
+  }
+  if (element instanceof SVGSVGElement) {
+    // console.log("is svg", element);
+    const bbox = element.getBBox();
+    const aspectRatio = bbox.width / bbox.height;
+    const newWidth = aspectRatio * targetHeight;
+    adjustElementSize(element, newWidth, targetHeight);
+  } else {
+    // console.log("is not svg", element);
+    const aspectRatio = element.offsetWidth / element.offsetHeight;
+    const newWidth = aspectRatio * targetHeight;
+    adjustElementSize(element, newWidth, targetHeight);
+  }
 }
 
 function adjustElements() {
-  const images = document.querySelectorAll(IMAGE_SELECTOR);
-  const svg = document.querySelector(SVG_ELEMENT);
-  const button = document.querySelector(BUTTON_SELECTOR);
-  const buttonHeight = button.offsetHeight;
+  const btnParent = document.querySelector(`.${BUTTON_SELECTOR}`);
+  const btnParentHeight = btnParent.offsetHeight;
 
-  images.forEach((image) => adjustElementToHeight(image, buttonHeight));
-  adjustElementToHeight(svg, buttonHeight);
-  adjustParentSize(svg, svg.style.width, buttonHeight);
+  const logos = document.querySelectorAll(`.${LOGOE_SELECTOR}`);
+  logos.forEach((logo) => adjustElementToHeight(logo, btnParentHeight));
+
+  const cartParent = document.querySelector(`.${SVG_CART}`);
+  adjustElementToHeight(cartParent, btnParentHeight);
+  adjustParentSize(cartParent, cartParent.offsetWidth, btnParentHeight);
 }
 
 function adjustContainer() {
