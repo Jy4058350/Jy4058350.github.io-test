@@ -1,13 +1,14 @@
 import init from "./bootstrap";
-import "normalize.css";
+// import "normalize.css";
 // import "../styles/style.scss";
-(async () => {
-  const dotenv = await import("dotenv");
-  dotenv.config();
-  init();
-})();
 
 init();
+
+if (import.meta.env.VITE_APP_ENV === "development") {
+  console.log("Development output");
+} else if (import.meta.env.VITE_APP_ENV === "production") {
+  console.log("Production output");
+}
 
 import assetInit from "./helper/utils/assets.js";
 assetInit();
