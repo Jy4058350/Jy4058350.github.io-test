@@ -17,50 +17,44 @@ export default (function () {
   const iconConfig = isDesktopView() ? config.tabletAndUp : config.phone;
   createIcon(iconConfig);
 
-  const svgPath = isDesktopView() ? config.svg.cartDesktop : config.svg.cartPhone;
+  // const svgPath = isDesktopView() ? config.svg.cartDesktop : config.svg.cartPhone;
+  console.log("cartDesktopSvg", cartDesktopSvg);
+  const svgPath = isDesktopView() ? cartDesktopSvg : cartPhoneSvg;
   createCart(svgPath);
 })();
 
 // fecth関数は開発サーバー（npm run dev）で実行するときはローカルファイルを読み込むことができますが、ビルド後の静的なHTMLファイル（npm run build）では同じ動作をしない。
 // これは、ビルド後のファイルはサーバーから提供されるため、ローカルファイルを読み込むことができないためです。
-async function getSVG(path) {
-  // try {
-  //   const response = await fetch(`../public/svg/${path}`);
-  //   // Add error handling if response is not ok
-  //   if (!response.ok) {
-  //     throw new Error(`HTTP error! status: ${response.status}`);
-  //   }
-  //   const data = await response.text();
+// Change argument from path to data
+async function getSVG(data) {
+  const parser = new DOMParser();
+  const svgDoc = parser.parseFromString(data, "image/svg+xml");
+  const svgElement = svgDoc.querySelector("svg");
 
-    const parser = new DOMParser();
-    const svgDoc = parser.parseFromString(data, "image/svg+xml");
-    const svgElement = svgDoc.querySelector("svg");
+  if (!svgElement) {
+    throw new Error(`No SVG element found in the provided data: ${data}`);
+  }
+  // Set dummy values if height or width are not set
+  if (!svgElement.getAttribute("height")) {
+    svgElement.setAttribute("height", "20");
+  }
+  if (!svgElement.getAttribute("width")) {
+    svgElement.setAttribute("width", "20");
+  }
 
-    if (!svgElement) {
-      throw new Error(`No SVG element found in the response for path: ${path}`);
-    }
-    // Set dummy values if height or width are not set
-    if (!svgElement.getAttribute("height")) {
-      svgElement.setAttribute("height", "20");
-    }
-    if (!svgElement.getAttribute("width")) {
-      svgElement.setAttribute("width", "20");
-    }
-
-    const pathElements = svgElement.querySelectorAll("path");
-    pathElements.forEach((pathElement) => {
-      pathElement.setAttribute("fill", "white");
-      pathElement.setAttribute("stroke", "white");
-      pathElement.setAttribute("stroke-width", "0.05");
-    });
-    return svgElement;
-  // } catch (error) {
-  //   // Add point of failure to error message
-  //   console.error("Error in getSVG:", error);
-  // }
+  const pathElements = svgElement.querySelectorAll("path");
+  pathElements.forEach((pathElement) => {
+    pathElement.setAttribute("fill", "white");
+    pathElement.setAttribute("stroke", "white");
+    pathElement.setAttribute("stroke-width", "0.05");
+  });
+  console.log("svgElement", svgElement);
+  return svgElement;
 }
 
+// Change argument from svgPath to svgData
 async function createCart(svgData) {
+  console.log("createCart", svgData);
   try {
     const svgParent = document.querySelector(`.${SVG_CART}`);
     // Add error handling if no element is found
@@ -71,6 +65,7 @@ async function createCart(svgData) {
     clearElementChildren(svgParent);
 
     const svgElement = await getSVG(svgData);
+    console.log("svgElement", svgElement);
     if (!svgElement) {
       throw new Error(`No SVG element created for path: ${svgData}`);
     }
