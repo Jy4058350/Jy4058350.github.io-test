@@ -26,7 +26,6 @@ const world = {
 };
 
 export default function worldInit(canvas, viewport) {
-  console.log("worldInit");
   world.renderer = new WebGLRenderer({ canvas, antialias: true });
   world.renderer.setSize(viewport.width, viewport.height, false);
   world.renderer.setPixelRatio(viewport.devicePixelRatio);
