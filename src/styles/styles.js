@@ -14,12 +14,10 @@ isDesktopView(BREAKPOINT_WIDTH);
 
 export default (function () {
   adjustContainer();
-  const iconConfig = isDesktopView() ? config.tabletAndUp : config.phone;
+  const iconConfig = isDesktopView(BREAKPOINT_WIDTH) ? config.phone : config.tabletAndUp;
   createIcon(iconConfig);
 
-  // const svgPath = isDesktopView() ? config.svg.cartDesktop : config.svg.cartPhone;
-  console.log("cartDesktopSvg", cartDesktopSvg);
-  const svgPath = isDesktopView() ? cartDesktopSvg : cartPhoneSvg;
+  const svgPath = isDesktopView(BREAKPOINT_WIDTH) ? cartPhoneSvg : cartDesktopSvg;
   createCart(svgPath);
 })();
 
@@ -48,13 +46,11 @@ async function getSVG(data) {
     pathElement.setAttribute("stroke", "white");
     pathElement.setAttribute("stroke-width", "0.05");
   });
-  console.log("svgElement", svgElement);
   return svgElement;
 }
 
 // Change argument from svgPath to svgData
 async function createCart(svgData) {
-  console.log("createCart", svgData);
   try {
     const svgParent = document.querySelector(`.${SVG_CART}`);
     // Add error handling if no element is found
@@ -65,7 +61,6 @@ async function createCart(svgData) {
     clearElementChildren(svgParent);
 
     const svgElement = await getSVG(svgData);
-    console.log("svgElement", svgElement);
     if (!svgElement) {
       throw new Error(`No SVG element created for path: ${svgData}`);
     }
@@ -93,9 +88,9 @@ window.addEventListener("resize", () => {
   clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(async () => {
     console.log("resize");
-    const typeDevice = window.innerWidth >= BREAKPOINT_WIDTH ? config.tabletAndUp : config.phone;
+    const typeDevice = isDesktopView(BREAKPOINT_WIDTH) ? config.phone : config.tabletAndUp;
     createIcon(typeDevice);
-    const svgPath = window.innerWidth >= BREAKPOINT_WIDTH ? config.svg.cartDesktop : config.svg.cartPhone;
+    const svgPath = isDesktopView(BREAKPOINT_WIDTH) ? config.svg.cartPhone : config.svg.cartDesktop;
     await createCart(svgPath);
 
     adjustElements();

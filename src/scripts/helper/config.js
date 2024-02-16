@@ -25,7 +25,7 @@ export const config = {
   buttonSelector: "Header__FlexItem",
   svgCart: "cart",
   svg: {
-    cartDesktop: "cart_desktop.svg",
-    cartPhone: "cart_phone.svg",
+    cartDesktop: "cartDesktopSvg",
+    cartPhone: "cartPhoneSvg",
   },
 };

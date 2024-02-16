@@ -1,3 +1,3 @@
 export function isDesktopView(num) {
-    return window.innerWidth >= num;
+    return window.innerWidth <= num;
   }
