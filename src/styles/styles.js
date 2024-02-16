@@ -1,6 +1,6 @@
 import { config, isDesktopView } from "../scripts/helper";
-import cartPhoneSvg from "../public/svg/cart_phone.svg";
-import cartDesktopSvg from "../public/svg/cart_desktop.svg";
+import cartPhoneSvg from "../svg/cart_phone.js";
+import cartDesktopSvg from "../svg/cart_desktop.js";
 
 const BREAKPOINT_WIDTH = config.page.breakpoint;
 const DEBOUNCE_TIME = config.time.debounce;
