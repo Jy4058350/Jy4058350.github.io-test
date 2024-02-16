@@ -1,4 +1,6 @@
 import { config, isDesktopView } from "../scripts/helper";
+import cartPhoneSvg from "../public/svg/cart_phone.svg";
+import cartDesktopSvg from "../public/svg/cart_desktop.svg";
 
 const BREAKPOINT_WIDTH = config.page.breakpoint;
 const DEBOUNCE_TIME = config.time.debounce;
@@ -19,6 +21,8 @@ export default (function () {
   createCart(svgPath);
 })();
 
+// fecth関数は開発サーバー（npm run dev）で実行するときはローカルファイルを読み込むことができますが、ビルド後の静的なHTMLファイル（npm run build）では同じ動作をしない。
+// これは、ビルド後のファイルはサーバーから提供されるため、ローカルファイルを読み込むことができないためです。
 async function getSVG(path) {
   try {
     const response = await fetch(`../public/svg/${path}`);
