@@ -24,13 +24,13 @@ export default (function () {
 // fecth関数は開発サーバー（npm run dev）で実行するときはローカルファイルを読み込むことができますが、ビルド後の静的なHTMLファイル（npm run build）では同じ動作をしない。
 // これは、ビルド後のファイルはサーバーから提供されるため、ローカルファイルを読み込むことができないためです。
 async function getSVG(path) {
-  try {
-    const response = await fetch(`../public/svg/${path}`);
-    // Add error handling if response is not ok
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.text();
+  // try {
+  //   const response = await fetch(`../public/svg/${path}`);
+  //   // Add error handling if response is not ok
+  //   if (!response.ok) {
+  //     throw new Error(`HTTP error! status: ${response.status}`);
+  //   }
+  //   const data = await response.text();
 
     const parser = new DOMParser();
     const svgDoc = parser.parseFromString(data, "image/svg+xml");
@@ -54,13 +54,13 @@ async function getSVG(path) {
       pathElement.setAttribute("stroke-width", "0.05");
     });
     return svgElement;
-  } catch (error) {
-    // Add point of failure to error message
-    console.error("Error in getSVG:", error);
-  }
+  // } catch (error) {
+  //   // Add point of failure to error message
+  //   console.error("Error in getSVG:", error);
+  // }
 }
 
-async function createCart(svgPath) {
+async function createCart(svgData) {
   try {
     const svgParent = document.querySelector(`.${SVG_CART}`);
     // Add error handling if no element is found
@@ -70,9 +70,9 @@ async function createCart(svgPath) {
 
     clearElementChildren(svgParent);
 
-    const svgElement = await getSVG(svgPath);
+    const svgElement = await getSVG(svgData);
     if (!svgElement) {
-      throw new Error(`No SVG element created for path: ${svgPath}`);
+      throw new Error(`No SVG element created for path: ${svgData}`);
     }
     svgParent.appendChild(svgElement);
     if (window.innerWidth >= BREAKPOINT_WIDTH) {
