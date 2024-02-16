@@ -1,52 +1,16 @@
 import { config } from "../scripts/helper";
+const SELECTOR = config.selector;
+const IMAGE_SELECTOR = config.imageSelector;
+const BUTTON_SELECTOR = config.buttonSelector;
+const SVG_ELEMENT = config.svgElement;
+
 export default (function () {
-  adjustGlobalContainer();
-  createSvgIcon(config);
-  adjustImageAndCartToButtonHeight({
-    imageSelector: config.imageSelector,
-    buttonSelector: config.buttonSelector,
-    svgElement: config.svgElement,
-  });
+  adjustContainer();
+  createIcon(config);
+  adjustElements();
 })();
 
-function adjustParentHeightToChildHeigh(cart, newWidth, buttonHeight) {
-  const parentElement = cart.parentNode;
-  parentElement.style.height = `${buttonHeight}px`;
-  parentElement.style.width = `${newWidth}px`;
-}
-
-function adjustSvgHeightToButtonHeight(cart, buttonHeight) {
-  const bbox = cart.getBBox();
-  const height = bbox.width;
-  const width = bbox.height;
-
-  const aspectRatio = width / height;
-  const newHeight = buttonHeight;
-  const newWidth = aspectRatio * newHeight;
-  cart.style.width = `${newWidth}px`;
-  cart.style.height = `${buttonHeight}px`;
-  adjustParentHeightToChildHeigh(cart, newWidth, buttonHeight);
-}
-
-function adjustImageAndCartToButtonHeight({ imageSelector, buttonSelector, svgElement }) {
-  const button = document.querySelector(buttonSelector);
-  const logoImage = document.querySelectorAll(imageSelector);
-  const cart = document.querySelector(svgElement);
-
-  const buttonHeight = button.offsetHeight;
-
-  logoImage.forEach((logoImage) => {
-    const width = logoImage.offsetWidth;
-    const height = logoImage.offsetHeight;
-
-    const aspectRatio = width / height;
-    const newWidth = aspectRatio * buttonHeight;
-    logoImage.style.width = `${newWidth}px`;
-    logoImage.style.height = `${buttonHeight}px`;
-  });
-  adjustSvgHeightToButtonHeight(cart, buttonHeight);
-}
-function createSvgIcon({ viewBox, width, height, rectWidth, rectHeight, selector }) {
+function createIcon({ viewBox, width, height, rectWidth, rectHeight }) {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.setAttribute("viewBox", viewBox);
   svg.setAttribute("width", width);
@@ -59,23 +23,44 @@ function createSvgIcon({ viewBox, width, height, rectWidth, rectHeight, selector
     rect.setAttribute("y", i * parseInt(height));
     svg.appendChild(rect);
   }
-
-  const iconWrapper = document.querySelector(selector);
+  const iconWrapper = document.querySelector(SELECTOR);
 
   iconWrapper.appendChild(svg);
 }
+function adjustParentSize(element, newWidth, newHeight) {
+  const parent = element.parentNode;
+  parent.style.height = `${newHeight}px`;
+  parent.style.width = `${newWidth}px`;
+}
 
-function adjustGlobalContainer() {
+function adjustElementSize(element, newWidth, newHeight) {
+  element.style.width = `${newWidth}px`;
+  element.style.height = `${newHeight}px`;
+}
+
+function adjustElementToHeight(element, targetHeight) {
+  const aspectRatio = element.offsetWidth / element.offsetHeight;
+  const newWidth = aspectRatio * targetHeight;
+  adjustElementSize(element, newWidth, targetHeight);
+}
+
+function adjustElements() {
+  const images = document.querySelectorAll(IMAGE_SELECTOR);
+  const svg = document.querySelector(SVG_ELEMENT);
+  const button = document.querySelector(BUTTON_SELECTOR);
+  const buttonHeight = button.offsetHeight;
+
+  images.forEach((image) => adjustElementToHeight(image, buttonHeight));
+  adjustElementToHeight(svg, buttonHeight);
+  adjustParentSize(svg, svg.style.width, buttonHeight);
+}
+
+function adjustContainer() {
   const allElements = document.body.getElementsByTagName("*");
 
-  const sectionElements = Array.from(allElements).filter((el) => {
-    return el.id.includes("section");
-  });
-  const height = new Map();
-  sectionElements.forEach((el) => {
-    height.set(el.id, el.offsetHeight);
-  });
-  const totalHeight = Array.from(height.values()).reduce((sum, height) => sum + height, 0);
+  const sectionElements = Array.from(allElements).filter((el) => el.id.includes("section"));
+
+  const totalHeight = sectionElements.reduce((sum, el) => sum + el.offsetHeight, 0);
   const globalContainer = document.getElementById("global-container");
   if (globalContainer) globalContainer.style.height = `${totalHeight}px`;
 }

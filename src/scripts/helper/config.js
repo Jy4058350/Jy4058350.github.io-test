@@ -5,7 +5,6 @@ export const config = {
   rectWidth: "100",
   rectHeight: "10",
   selector: "button.Header__Icon",
-
   imageSelector: ".Header__LogoImage",
   buttonSelector: ".Header__FlexItem",
   svgElement: ".Icon--cart-desktop",

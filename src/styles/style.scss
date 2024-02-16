@@ -15,9 +15,6 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-body {
-  margin: 0;
-}
 
 #canvas {
   height: 100vh;
@@ -166,6 +163,10 @@ img {
   border-style: none;
 }
 
+svg:not(:root) {
+  overflow: hidden;
+}
+
 button,
 input,
 optgroup,
@@ -228,6 +229,17 @@ button:-moz-focusring,
   left: -12px;
   content: "";
   transform: translateZ(0); /* Needed to avoid a glitch on iOS */
+}
+
+.Icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+  pointer-events: none;
+  background: none;
+  fill: currentColor;
+  stroke-width: 1px;
 }
 
 /**
