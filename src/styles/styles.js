@@ -90,7 +90,7 @@ window.addEventListener("resize", () => {
     console.log("resize");
     const typeDevice = isDesktopView(BREAKPOINT_WIDTH) ? config.phone : config.tabletAndUp;
     createIcon(typeDevice);
-    const svgPath = isDesktopView(BREAKPOINT_WIDTH) ? config.svg.cartPhone : config.svg.cartDesktop;
+    const svgPath = isDesktopView(BREAKPOINT_WIDTH) ? cartPhoneSvg : cartDesktopSvg;
     await createCart(svgPath);
 
     adjustElements();
