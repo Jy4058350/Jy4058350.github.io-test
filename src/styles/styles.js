@@ -21,7 +21,7 @@ export default (function () {
 
 async function getSVG(path) {
   try {
-    const response = await fetch(`../svg/${path}`);
+    const response = await fetch(`../public/svg/${path}`);
     // Add error handling if response is not ok
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
