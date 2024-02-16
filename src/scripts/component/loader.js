@@ -122,8 +122,6 @@ async function loadVideo(url) {
   if (!video.canPlayType(`video/${extention}`)) {
     return null;
   }
-
-  console.log(extention);
   incrementTotal();
   return new Promise((resolve) => {
     const video = document.createElement("video");

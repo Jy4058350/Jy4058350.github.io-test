@@ -2,14 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script type="module" src="./scripts/index.js"></script>
-    <title>Loading_Process</title>
+    <title>commit 47389fe</title>
     <link rel="stylesheet" href="./styles/loader.scss" />
+    <link rel="stylesheet" href="./styles/style.scss" />
   </head>
   <body>
-    <div id="loader" class="loader">
+    <div id="loader" class="Loader">
       <div class="loader-inner">
         <div class="loader-rect">
           <div></div>
@@ -23,13 +23,37 @@
     </div>
     <div id="global-container">
       <div id="page-container">
-        <img
-          data-webgl
-          data-tex-1="./img/yamadera.jpeg"
-          src="./public/img/yamadera.jpeg"
-          data-tex-2="./img/sakuramich.jpeg"
-          src="./public/img/sakuramich.jpeg"
-        />
+        <header id="section-header">
+          <div class="Header__Wrapper">
+            <div class="Header__FlexItem Header__FlexItem--fill">
+              <button class="Header__Icon Icon-Wrapper Icon-Wrapper--clickable" aria-label="メニューを開く"></button>
+              <nav class="Header__MainNav"></nav>
+              <form action=""></form>
+            </div>
+            <div class="Header__FlexItem Header__FlexItem--logo">
+              <h1 class="Header__Logo">
+                <a href="" class="Header__LogoLink">
+                  <img src="./public/logo-black.png" alt="" class="Header__LogoImage" />
+                  <img src="./public/logo-black.png" alt="" class="Header__LogoImage Header__LogoImage--transparent" />
+                </a>
+              </h1>
+            </div>
+            <div class="Header__FlexItem Header__FlexItem--fill">
+              <a href="/cart" class="Header__Icon Icon-Wrapper Icon-Wrapper--clickable" aria-label="カートを開く">
+                <span class="cart"> </span>
+              </a>
+            </div>
+          </div>
+        </header>
+        <main id="section-main">
+          <img
+            data-webgl
+            data-tex-1="./img/yamadera.jpeg"
+            src="./public/img/yamadera.jpeg"
+            data-tex-2="./img/sakuramich.jpeg"
+            src="./public/img/sakuramich.jpeg"
+          />
+        </main>
         <style>
           [data-webgl] {
             opacity: 0.3;
@@ -45,7 +69,7 @@
         </style>
       </div>
     </div>
-
+    <footer id="section-footer"></footer>
     <canvas id="canvas"></canvas>
   </body>
 </html>

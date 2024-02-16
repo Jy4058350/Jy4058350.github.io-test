@@ -1,10 +1,13 @@
 import string from "vite-plugin-string";
+import svgLoader from "vite-svg-loader";
+import { defineConfig } from "vite";
 
 export default {
   base: "",
   plugins: [
     string({
-      include: "**/*.glsl",
+      include: ["**/*.glsl", "**/*.svg"],
     }),
   ],
+  assetsInclude: [],
 };

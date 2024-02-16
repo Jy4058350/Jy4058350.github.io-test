@@ -1,14 +1,4 @@
-import {
-  WebGLRenderer,
-  Scene,
-  PlaneGeometry,
-  ShaderMaterial,
-  Mesh,
-  Vector2,
-  PerspectiveCamera,
-  Raycaster,
-  Vector4,
-} from "three";
+import { WebGLRenderer, Scene, PlaneGeometry, ShaderMaterial, Mesh, Vector2, PerspectiveCamera, Raycaster, Vector4 } from "three";
 import { viewport } from "../helper/viewport.js";
 import mouseInit, { pointer } from "../component/mouse.js";
 import { lerp } from "../helper/utils/math.js";
@@ -26,7 +16,6 @@ const world = {
 };
 
 export default function worldInit(canvas, viewport) {
-  console.log("worldInit");
   world.renderer = new WebGLRenderer({ canvas, antialias: true });
   world.renderer.setSize(viewport.width, viewport.height, false);
   world.renderer.setPixelRatio(viewport.devicePixelRatio);
