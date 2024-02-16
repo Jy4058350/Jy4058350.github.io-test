@@ -1,5 +1,22 @@
 export default (function () {
   adjustGlobalContainer();
+
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", "0 0 100 80");
+  svg.setAttribute("width", "30");
+  svg.setAttribute("height", "30");
+
+  for (let i = 0; i < 3; i++) {
+    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    rect.setAttribute("width", "100");
+    rect.setAttribute("height", "10");
+    rect.setAttribute("y", i * 30);
+    svg.appendChild(rect);
+  }
+
+  const iconWrapper = document.querySelector("button.Header__Icon");
+
+  iconWrapper.appendChild(svg);
 })();
 
 function adjustGlobalContainer() {

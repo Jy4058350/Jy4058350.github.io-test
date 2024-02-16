@@ -1,6 +1,5 @@
+import "../styles/style.scss";
 import init from "./bootstrap";
-// import "normalize.css";
-// import "../styles/style.scss";
 
 init();
 
