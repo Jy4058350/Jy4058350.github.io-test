@@ -1,4 +1,4 @@
-import { config } from "../scripts/helper";
+import { config } from "../scripts/helper/config.js";
 const SELECTOR = config.selector;
 const IMAGE_SELECTOR = config.imageSelector;
 const BUTTON_SELECTOR = config.buttonSelector;

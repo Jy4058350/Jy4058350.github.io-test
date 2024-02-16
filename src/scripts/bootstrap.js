@@ -1,15 +1,13 @@
 import gsap from "gsap";
 import Scrollbar from "smooth-scrollbar";
-import ScrollTrigger from "gsap/ScrollTrigger";
+import ScrollTrigger from "gsap/ScrollTrigger.js";
 import scrollInit from "./component/scroll.js";
-import { WebGLRenderer } from "three";
 
 import mouseInit from "./component/mouse.js";
 import { viewport } from "./helper/viewport.js";
 import worldInit, { world } from "./glsl/world.js";
 import loader from "./component/loader.js";
-import { percentage } from "./helper/utils/math.js";
-import styles from "../styles/styles.js";
+import styles from "../styles/styles.js"; //ここのimportは現時点は必要です。今後修正される可能性があります。
 
 export default async function init() {
   const canvas = document.querySelector("#canvas");
