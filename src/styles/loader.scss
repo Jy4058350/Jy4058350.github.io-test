@@ -1,5 +1,5 @@
 body {
-  overflow: hidden;
+  overflow: scroll;
 }
 
 #global-container {
@@ -9,7 +9,13 @@ body {
   z-index: 0;
 }
 
-.loader {
+// Hide scrollbar from Scrollbar API
+.scrollbar-track,
+.scrollbar-thumb {
+  display: none !important;
+}
+
+.Loader {
   position: fixed;
   z-index: 999;
   width: 100%;

@@ -21,7 +21,7 @@ const $ = {};
 function init() {
   $.globalContainer = document.getElementById("global-container");
   $.loader = document.getElementById("loader");
-  $.loaderPercent = document.getElementById("loader-percent");
+  $.loaderPercent = document.getElementById("Loader-percent");
   addProgressAction((progress, total) => {
     $.loaderPercent.innerHTML = percentage(progress, total) + "%";
     console.log(progress, total);

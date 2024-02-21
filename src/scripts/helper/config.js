@@ -20,12 +20,26 @@ export const config = {
     rectWidth: "100",
     rectHeight: "10",
   },
-  selector: "button.Header__Icon",
+  buttonselector: "button.Header__Icon",
   logoeSelector: "Header__LogoImage",
-  buttonSelector: "Header__FlexItem",
+  buttonParent: "Header__FlexItem",
   svgCart: "cart",
   svg: {
     cartDesktop: "cartDesktopSvg",
     cartPhone: "cartPhoneSvg",
+  },
+  color: {
+    header: "#ffffff",
+  },
+
+  // root settings for slide
+  target: {
+    pageContainer: "page-container",
+    header: "header",
+    announcement: "AnnouncementBar__Content",
+  },
+  rootProperty: {
+    headerHeight: "--header-height",
+    announcementHeight: "--announcement-bar-height",
   },
 };
