@@ -1,24 +1,49 @@
 import { config, isDesktopView } from "../scripts/helper";
 import cartPhoneSvg from "../svg/cart_phone.js";
 import cartDesktopSvg from "../svg/cart_desktop.js";
+// import scrollInit from "../scripts/component/scroll.js";
 
 const BREAKPOINT_WIDTH = config.page.breakpoint;
 const DEBOUNCE_TIME = config.time.debounce;
-const SELECTOR = config.selector;
+const BUTTON_SELECTOR = config.buttonselector;
 const LOGOE_SELECTOR = config.logoeSelector;
-const BUTTON_SELECTOR = config.buttonSelector;
+const BUTTON_PARENT = config.buttonParent;
 const SVG_CART = config.svgCart;
+const headerColor = config.color.header;
+const PAGE = config.target.pageContainer;
+const HEADER = config.target.header;
+const ANNOUNCEMENT = config.target.announcement;
+const HEADER_HEIGHT = config.rootProperty.headerHeight;
+const ANNOUNCEMENT_HEIGHT = config.rootProperty.announcementHeight;
+
+// const { disablePlugin, enablePlugin } = scrollInit();
 
 // Check if the current view is desktop or not using the helper function
 isDesktopView(BREAKPOINT_WIDTH);
 
 export default (function () {
-  adjustContainer();
-  const iconConfig = isDesktopView(BREAKPOINT_WIDTH) ? config.phone : config.tabletAndUp;
-  createIcon(iconConfig);
+  document.addEventListener("DOMContentLoaded", function () {
+    // The DOM is fully loaded
 
-  const svgPath = isDesktopView(BREAKPOINT_WIDTH) ? cartPhoneSvg : cartDesktopSvg;
-  createCart(svgPath);
+    // adjustContainer();
+    viewportSettings();
+    const iconConfig = isDesktopView(BREAKPOINT_WIDTH) ? config.tabletAndUp : config.phone;
+    createIcon(iconConfig);
+
+    const svgPath = isDesktopView(BREAKPOINT_WIDTH) ? cartDesktopSvg : cartPhoneSvg;
+    createCart(svgPath);
+
+    // <title>タグのテキストを取得する
+    function getTitle() {
+      const title = document.title;
+      const announcement = document.querySelector(".AnnouncementBar__Content");
+      if (announcement) {
+        announcement.innerHTML = title;
+      }
+      return title;
+    }
+    getTitle();
+  });
 })();
 
 // fecth関数は開発サーバー（npm run dev）で実行するときはローカルファイルを読み込むことができますが、ビルド後の静的なHTMLファイル（npm run build）では同じ動作をしない。
@@ -71,7 +96,7 @@ async function createCart(svgData) {
       svgElement.classList.add("hidden-tablet-and-up");
     }
 
-    const btnParent = document.querySelector(`.${BUTTON_SELECTOR}`);
+    const btnParent = document.querySelector(`.${BUTTON_PARENT}`);
     const btnParentHeight = btnParent.offsetHeight;
     adjustElementToHeight(svgElement, btnParentHeight);
 
@@ -84,18 +109,20 @@ async function createCart(svgData) {
 
 // Add event listener to window resize
 let resizeTimeout;
-window.addEventListener("resize", () => {
+window.addEventListener("resize", handleResize);
+window.addEventListener("orientationchange", handleResize);
+
+function handleResize() {
   clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(async () => {
-    console.log("resize");
-    const typeDevice = isDesktopView(BREAKPOINT_WIDTH) ? config.phone : config.tabletAndUp;
+    const typeDevice = isDesktopView(BREAKPOINT_WIDTH) ? config.tabletAndUp : config.phone;
     createIcon(typeDevice);
-    const svgPath = isDesktopView(BREAKPOINT_WIDTH) ? cartPhoneSvg : cartDesktopSvg;
+    const svgPath = isDesktopView(BREAKPOINT_WIDTH) ? cartDesktopSvg : cartPhoneSvg;
     await createCart(svgPath);
 
     adjustElements();
   }, DEBOUNCE_TIME);
-});
+}
 
 function clearElementChildren(element) {
   while (element.firstChild) {
@@ -116,6 +143,7 @@ function createRectangles(svg, height, rectWidth, rectHeight) {
     rect.setAttribute("width", rectWidth);
     rect.setAttribute("height", rectHeight);
     rect.setAttribute("y", i * parseInt(height));
+    rect.setAttribute("fill", headerColor);
     svg.appendChild(rect);
   }
 }
@@ -128,7 +156,7 @@ function createSvgWithRectangles({ viewBox, width, height, rectWidth, rectHeight
 }
 
 function createIcon(config) {
-  const btn = document.querySelector(SELECTOR);
+  const btn = document.querySelector(BUTTON_SELECTOR);
   clearElementChildren(btn);
 
   const phoneSvg = createSvgWithRectangles(config);
@@ -170,7 +198,7 @@ function adjustElementToHeight(element, targetHeight) {
 }
 
 function adjustElements() {
-  const btnParent = document.querySelector(`.${BUTTON_SELECTOR}`);
+  const btnParent = document.querySelector(`.${BUTTON_PARENT}`);
   const btnParentHeight = btnParent.offsetHeight;
 
   const logos = document.querySelectorAll(`.${LOGOE_SELECTOR}`);
@@ -181,12 +209,52 @@ function adjustElements() {
   adjustParentSize(cartParent, cartParent.offsetWidth, btnParentHeight);
 }
 
+window.addEventListener("load", function () {
+  cssVariable(HEADER, HEADER_HEIGHT);
+  cssVariable(`.${ANNOUNCEMENT}`, ANNOUNCEMENT_HEIGHT);
+});
+
+function viewportSettings() {
+  const viewportHeight = window.innerHeight;
+  const pageContainer = document.getElementById(PAGE);
+  if (pageContainer) pageContainer.style.height = `${viewportHeight}px`;
+  setElementHeight("--window-height", viewportHeight);
+}
+
+// ウィンドウサイズが変更されたときに再度実行
+window.addEventListener("resize", viewportSettings);
+
+// get element height and set as css variable
+function cssVariable(target, property) {
+  const targetEl = document.querySelector(target);
+  if (targetEl) {
+    const height = targetEl.offsetHeight;
+    setElementHeight(property, height);
+  }
+}
+
+// set css variable
+function setElementHeight(property, value) {
+  document.documentElement.style.setProperty(property, `${value}px`);
+}
+
+// すべてのセクションの高さを合計して、	ScrollTrigger.createでトリガーを作成する
+window.addEventListener("load", adjustContainer);
+
+let totalHeight = 0;
 function adjustContainer() {
   const allElements = document.body.getElementsByTagName("*");
-
   const sectionElements = Array.from(allElements).filter((el) => el.id.includes("section"));
-
-  const totalHeight = sectionElements.reduce((sum, el) => sum + el.offsetHeight, 0);
-  const globalContainer = document.getElementById("global-container");
-  if (globalContainer) globalContainer.style.height = `${totalHeight}px`;
+  totalHeight = 0;
+  sectionElements.forEach((el) => {
+    console.log("Height of section", el.id, ":", el.offsetHeight);
+    totalHeight += el.offsetHeight;
+  });
+  console.log("totalHeight", totalHeight);
 }
+
+export const dimensions = {
+  get totalHeight() {
+    return totalHeight;
+  },
+};

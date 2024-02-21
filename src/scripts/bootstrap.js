@@ -1,6 +1,3 @@
-import gsap from "gsap";
-import Scrollbar from "smooth-scrollbar";
-import ScrollTrigger from "gsap/ScrollTrigger.js";
 import scrollInit from "./component/scroll.js";
 
 import mouseInit from "./component/mouse.js";
@@ -13,7 +10,8 @@ export default async function init() {
   const canvas = document.querySelector("#canvas");
 
   viewport.init(canvas);
-  scrollInit(gsap, ScrollTrigger, Scrollbar);
+  // scrollInit(gsap, ScrollTrigger, Scrollbar, ScrollbarPlugin);
+  scrollInit();
   loader.init();
 
   await loader.loadAllAssets();

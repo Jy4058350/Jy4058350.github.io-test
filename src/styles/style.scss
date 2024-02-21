@@ -1,4 +1,6 @@
 @charset "utf-8";
+@import "debug";
+@import "slider";
 @import "../node_modules/normalize.css";
 /**
  * ----------------------------------------------------------------------------------------------
@@ -212,6 +214,23 @@ button:-moz-focusring,
 [type="submit"]:-moz-focusring {
   outline: 1px dotted ButtonText;
 }
+.Heading {
+  font-family: var(--heading-font-family);
+  font-style: var(--heading-font-style);
+  font-weight: var(--heading-font-weight);
+  // color: var(--heading-color);
+  color: white;
+  transition: color 0.2s ease-in-out;
+}
+.features--heading-uppercase .Heading {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+}
+
+.features--heading-normal .u-h1,
+.features--heading-normal .Rte h1 {
+  font-size: 22px;
+}
 
 /*------------------------------------*\
     Grid WIDTHS 371
@@ -243,11 +262,180 @@ button:-moz-focusring,
   stroke-width: 1px;
 }
 
+@media screen and (max-width: 640px) {
+  .hidden-phone {
+    display: none !important;
+  }
+
+  .\31\/2--phone,
+  .\32\/4--phone,
+  .\36\/12--phone {
+    width: 50%;
+  }
+
+  .\31\/3--phone,
+  .\34\/12--phone {
+    width: 33.33333%;
+  }
+
+  .\32\/3--phone,
+  .\38\/12--phone {
+    width: 66.66667%;
+  }
+
+  .\31\/4--phone,
+  .\33\/12--phone {
+    width: 25%;
+  }
+
+  .\33\/4--phone,
+  .\39\/12--phone {
+    width: 75%;
+  }
+
+  .\31\/12--phone {
+    width: 8.33333%;
+  }
+
+  .\32\/12--phone {
+    width: 16.66667%;
+  }
+
+  .\35\/12--phone {
+    width: 41.66667%;
+  }
+
+  .\37\/12--phone {
+    width: 58.33333%;
+  }
+
+  .\31\30\/12--phone {
+    width: 83.33333%;
+  }
+
+  .\31\31\/12--phone {
+    width: 91.66667%;
+  }
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * Standard button 1500
+ * ----------------------------------------------------------------------------
+ */
+.Button,
+.shopify-payment-button__button--unbranded,
+input.spr-button-primary,
+.spr-summary-actions-newreview,
+.spr-button-primary:not(input),
+.spr-pagination-prev > a,
+.spr-pagination-next > a {
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+  padding: 14px 28px;
+  font-family: var(--heading-font-family);
+  font-size: calc(var(--base-text-font-size) - (var(--default-text-font-size) - 12px));
+  font-style: var(--heading-font-style);
+  font-weight: var(--heading-font-weight);
+  line-height: normal;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 0;
+  transition: color 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86), border 0.45s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  -webkit-tap-highlight-color: initial;
+}
+.Button::before,
+.shopify-payment-button__button--unbranded::before,
+input.spr-button-primary::before,
+.spr-summary-actions-newreview.spr-summary-actions-newreview::before,
+.spr-button-primary:not(input)::before,
+.spr-pagination-prev > a::before,
+.spr-pagination-next > a::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  content: "";
+  transform: scale(1, 1);
+  transform-origin: left center;
+}
+
 /**
  * ----------------------------------------------------------------------------
  * Button group 1696
  * ----------------------------------------------------------------------------
  */
+.ButtonGroup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  margin: -12px;
+}
+
+.ButtonGroup--spacingSmall {
+  margin: -8px;
+}
+
+.ButtonGroup--spacingSmall .ButtonGroup__Item {
+  margin: 8px;
+}
+
+.ButtonGroup__Item {
+  margin: 12px;
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * Announcement bar 4367
+ * ----------------------------------------------------------------------------
+ */
+
+.AnnouncementBar {
+  position: relative;
+  z-index: 1;
+  font-size: calc(var(--base-text-font-size) - (var(--default-text-font-size) - 10px));
+  text-align: center;
+}
+
+.AnnouncementBar__Wrapper {
+  padding: 12px 15px;
+}
+
+.AnnouncementBar__Content {
+  margin: 0;
+  color: inherit;
+}
+
+@media screen and (min-width: 641px) {
+  .AnnouncementBar {
+    font-size: calc(var(--base-text-font-size) - (var(--default-text-font-size) - 11px));
+  }
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * Share buttons
+ * ----------------------------------------------------------------------------
+ */
+
+/**
+ * ----------------------------------------------------------------------------
+ * POLICY PAGES 5625
+ * ----------------------------------------------------------------------------
+ */
+.SectionHeader__ButtonWrapper {
+  margin-top: 20px;
+}
 
 /**
 * ----------------------------------------------------------------------------------------------
