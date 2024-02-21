@@ -11,8 +11,6 @@ export default defineConfig({
   ],
   assetsInclude: [],
   build: {
-    build: {
-      assetsDir: "img",
-    },
+    assetsDir: "img",
   },
 });
