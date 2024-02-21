@@ -2,7 +2,7 @@ import string from "vite-plugin-string";
 import svgLoader from "vite-svg-loader";
 import { defineConfig } from "vite";
 
-export default {
+export default defineConfig({
   base: "",
   plugins: [
     string({
@@ -10,4 +10,9 @@ export default {
     }),
   ],
   assetsInclude: [],
-};
+  build: {
+    build: {
+      assetsDir: "img",
+    },
+  },
+});
