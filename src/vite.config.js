@@ -11,6 +11,7 @@ export default defineConfig({
   ],
   assetsInclude: [],
   build: {
+    outDir: "dist/vite",
     assetsDir: "img",
   },
 });
