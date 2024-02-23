@@ -2,3 +2,17 @@
   background: #262626;
   color: #ffffff;
 }
+
+// idクラスと連動している。js制御ができるまでの一時的な対応
+#section-header {
+  margin-bottom: calc(-1 * var(--header-height));
+}
+
+.supports-sticky .Search[aria-hidden="true"] + .Header--transparent {
+  box-shadow: 0 -1px rgba(255, 255, 255, 0.25) inset;
+  color: #ffffff;
+}
+
+.Header__LogoImage {
+  max-width: 95% !important;
+}

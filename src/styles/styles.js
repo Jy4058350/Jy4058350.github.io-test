@@ -5,11 +5,12 @@ import cartDesktopSvg from "../svg/cart_desktop.js";
 
 const BREAKPOINT_WIDTH = config.page.breakpoint;
 const DEBOUNCE_TIME = config.time.debounce;
-const BUTTON_SELECTOR = config.buttonselector;
+const HUMBERGER_SELECTOR = config.humbergerBtnSelector;
 const LOGOE_SELECTOR = config.logoeSelector;
 const BUTTON_PARENT = config.buttonParent;
 const SVG_CART = config.svgCart;
-const headerColor = config.color.header;
+const WHITE = config.color.white;
+const BLACK = config.color.black;
 const PAGE = config.target.pageContainer;
 const HEADER = config.target.header;
 const ANNOUNCEMENT = config.target.announcement;
@@ -28,7 +29,7 @@ export default (function () {
     // adjustContainer();
     viewportSettings();
     const iconConfig = isDesktopView(BREAKPOINT_WIDTH) ? config.tabletAndUp : config.phone;
-    createIcon(iconConfig);
+    addMenuBtn(iconConfig);
 
     const svgPath = isDesktopView(BREAKPOINT_WIDTH) ? cartDesktopSvg : cartPhoneSvg;
     createCart(svgPath);
@@ -67,14 +68,15 @@ async function getSVG(data) {
 
   const pathElements = svgElement.querySelectorAll("path");
   pathElements.forEach((pathElement) => {
-    pathElement.setAttribute("fill", "white");
-    pathElement.setAttribute("stroke", "white");
+    pathElement.setAttribute("fill", "currentColor");
+    pathElement.setAttribute("stroke", "currentColor");
     pathElement.setAttribute("stroke-width", "0.05");
   });
   return svgElement;
 }
 
 // Change argument from svgPath to svgData
+// SVGのデータを取得して,親span要素に追加する
 async function createCart(svgData) {
   try {
     const svgParent = document.querySelector(`.${SVG_CART}`);
@@ -85,6 +87,7 @@ async function createCart(svgData) {
 
     clearElementChildren(svgParent);
 
+    // カートデータを取得して、svg要素を作成する
     const svgElement = await getSVG(svgData);
     if (!svgElement) {
       throw new Error(`No SVG element created for path: ${svgData}`);
@@ -96,9 +99,10 @@ async function createCart(svgData) {
       svgElement.classList.add("hidden-tablet-and-up");
     }
 
-    const btnParent = document.querySelector(`.${BUTTON_PARENT}`);
-    const btnParentHeight = btnParent.offsetHeight;
-    adjustElementToHeight(svgElement, btnParentHeight);
+    // カートアイコンの高さを調整する
+    const cartBtn = document.querySelector(`.${BUTTON_PARENT}`);
+    const btnHeight = cartBtn.offsetHeight;
+    adjustElementToHeight(svgElement, btnHeight);
 
     adjustElements();
   } catch (error) {
@@ -116,7 +120,7 @@ function handleResize() {
   clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(async () => {
     const typeDevice = isDesktopView(BREAKPOINT_WIDTH) ? config.tabletAndUp : config.phone;
-    createIcon(typeDevice);
+    addMenuBtn(typeDevice);
     const svgPath = isDesktopView(BREAKPOINT_WIDTH) ? cartDesktopSvg : cartPhoneSvg;
     await createCart(svgPath);
 
@@ -129,43 +133,48 @@ function clearElementChildren(element) {
     element.removeChild(element.firstChild);
   }
 }
-
-function createSvg(viewBox, width, height) {
+// ハンバーガーメニューのスタイル以外のアイコンSVG要素を作成する（表示領域、幅、高さ）
+function createSvgBace(viewBox, width, height) {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.setAttribute("viewBox", viewBox);
   svg.setAttribute("width", width);
   svg.setAttribute("height", height);
+  console.log("svg", svg);
   return svg;
 }
+// ハンバーガーメニューのスタイルを作成する
 function createRectangles(svg, height, rectWidth, rectHeight) {
   for (let i = 0; i < 3; i++) {
     const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
     rect.setAttribute("width", rectWidth);
     rect.setAttribute("height", rectHeight);
     rect.setAttribute("y", i * parseInt(height));
-    rect.setAttribute("fill", headerColor);
+    rect.setAttribute("fill", "currentColor");
     svg.appendChild(rect);
   }
 }
 
 // Code duplication here so separate function to create svg with rectangles
-function createSvgWithRectangles({ viewBox, width, height, rectWidth, rectHeight }) {
-  const svg = createSvg(viewBox, width, height);
+//
+function createHumbergerIcon({ viewBox, width, height, rectWidth, rectHeight }) {
+  const svg = createSvgBace(viewBox, width, height);
   createRectangles(svg, height, rectWidth, rectHeight);
   return svg;
 }
 
-function createIcon(config) {
-  const btn = document.querySelector(BUTTON_SELECTOR);
+// humburgerボタンのアイコンをhtmlに追加する
+function addMenuBtn(typeDevice) {
+  const btn = document.querySelector(HUMBERGER_SELECTOR);
   clearElementChildren(btn);
 
-  const phoneSvg = createSvgWithRectangles(config);
-  const tabletAndUpSvg = createSvgWithRectangles(config);
+  const phoneSvg = createHumbergerIcon(typeDevice);
+  const tabletAndUpSvg = createHumbergerIcon(typeDevice);
 
   btn.appendChild(phoneSvg);
   btn.appendChild(tabletAndUpSvg);
   tabletAndUpSvg.style.display = "none";
 }
+// 親要素の高さと幅を調整する
 function adjustParentSize(element, newWidth, newHeight) {
   if (!element) return;
   const parent = element.parentNode;
@@ -178,6 +187,7 @@ function adjustElementSize(element, newWidth, newHeight) {
   element.style.height = `${newHeight}px`;
 }
 
+// アイコンの高さに合わせて、アイコンの高さを調整する
 function adjustElementToHeight(element, targetHeight) {
   if (!element) {
     console.log("No element provided to adjustElementToHeight");
@@ -197,6 +207,7 @@ function adjustElementToHeight(element, targetHeight) {
   }
 }
 
+// ボタンの高さに合わせて、アイコンの高さを調整する
 function adjustElements() {
   const btnParent = document.querySelector(`.${BUTTON_PARENT}`);
   const btnParentHeight = btnParent.offsetHeight;
@@ -209,11 +220,7 @@ function adjustElements() {
   adjustParentSize(cartParent, cartParent.offsetWidth, btnParentHeight);
 }
 
-window.addEventListener("load", function () {
-  cssVariable(HEADER, HEADER_HEIGHT);
-  cssVariable(`.${ANNOUNCEMENT}`, ANNOUNCEMENT_HEIGHT);
-});
-
+// ウィンドウの高さを取得して、ページの高さを設定する
 function viewportSettings() {
   const viewportHeight = window.innerHeight;
   const pageContainer = document.getElementById(PAGE);
@@ -224,6 +231,12 @@ function viewportSettings() {
 // ウィンドウサイズが変更されたときに再度実行
 window.addEventListener("resize", viewportSettings);
 
+// css変数をload時に設定する
+window.addEventListener("load", function () {
+  cssVariable(`#${HEADER}`, HEADER_HEIGHT);
+  cssVariable(`#${ANNOUNCEMENT}`, ANNOUNCEMENT_HEIGHT);
+});
+
 // get element height and set as css variable
 function cssVariable(target, property) {
   const targetEl = document.querySelector(target);
@@ -232,27 +245,27 @@ function cssVariable(target, property) {
     setElementHeight(property, height);
   }
 }
-
 // set css variable
 function setElementHeight(property, value) {
   document.documentElement.style.setProperty(property, `${value}px`);
 }
 
-// すべてのセクションの高さを合計して、	ScrollTrigger.createでトリガーを作成する
+// loadするときにセクション合計の高さを取得するためのadjustContainer関数を実行
 window.addEventListener("load", adjustContainer);
 
+// すべてのセクションの高さを合計して、	ScrollTrigger.createでトリガーを作成する
 let totalHeight = 0;
 function adjustContainer() {
   const allElements = document.body.getElementsByTagName("*");
   const sectionElements = Array.from(allElements).filter((el) => el.id.includes("section"));
   totalHeight = 0;
   sectionElements.forEach((el) => {
-    console.log("Height of section", el.id, ":", el.offsetHeight);
+    // console.log("Height of section", el.id, ":", el.offsetHeight);
     totalHeight += el.offsetHeight;
   });
-  console.log("totalHeight", totalHeight);
 }
 
+// scroll.jsにtotalHeightを渡す
 export const dimensions = {
   get totalHeight() {
     return totalHeight;

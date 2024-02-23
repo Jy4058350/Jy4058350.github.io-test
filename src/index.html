@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html class="js" lang="en">
+<html class="js supports-sticky" lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script type="module" src="./scripts/index.js"></script>
-    <title>Practice build assets Dir修正 imgパス変更</title>
+    <title>Practice cling header</title>
     <link rel="stylesheet" href="./styles/loader.scss" />
     <link rel="stylesheet" href="./styles/style.scss" />
   </head>
@@ -30,7 +30,7 @@
             </div>
           </div>
         </section>
-        <header id="section-header">
+        <header id="section-header" class="Header">
           <div class="Header__Wrapper">
             <div class="Header__FlexItem Header__FlexItem--fill">
               <button class="Header__Icon Icon-Wrapper Icon-Wrapper--clickable" aria-label="メニューを開く"></button>
@@ -40,8 +40,13 @@
             <div class="Header__FlexItem Header__FlexItem--logo">
               <h1 class="Header__Logo">
                 <a href="" class="Header__LogoLink">
-                  <img src="./public/logo-white.png" alt="" class="Header__LogoImage" />
-                  <img src="./public/logo-black.png" alt="" class="Header__LogoImage Header__LogoImage--transparent" />
+                  <img class="Header__LogoImage Header__LogoImage--primary" src="./public/logo-black.png" alt="" class="Header__LogoImage" />
+                  <img
+                    class="Header__LogoImage Header__LogoImage--transparent"
+                    src="./public/logo-white.png"
+                    alt=""
+                    class="Header__LogoImage Header__LogoImage--transparent"
+                  />
                 </a>
               </h1>
             </div>
@@ -54,7 +59,7 @@
         </header>
         <main id="main">
           <section id="section-1">
-            <div class="Slideshow Slideshow--fullscreen js">
+            <div class="Slideshow Slideshow--fullscreen">
               <div class="Slideshow__Carousel Carousel Carousel--fadeIn Carousel--fixed Carousel--insideDots flickity-enabled is-draggable">
                 <div class="flickity-viewport is-pointer-down">
                   <div class="flickity-slider">

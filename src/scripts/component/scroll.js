@@ -72,19 +72,19 @@ export default function scrollInit() {
 
   // Add a listener to the 'scroll' event of the custom scrollbar
   scrollbar.addListener((status) => {
-    console.log("status.offset.y:", status.offset.y);
-    console.log("scrollbar.scrollHeight:", scrollbar.getSize().content.height);
+    // console.log("status.offset.y:", status.offset.y);
+    // console.log("scrollbar.scrollHeight:", scrollbar.getSize().content.height);
     if (status.offset.y + window.innerHeight >= scrollbar.getSize().content.height) {
       console.log("you're at the bottom of the page");
     }
   });
 
   // totalHeightの計算をラップしないと不正確になる
+  // headerをtotalHightの値を受け取ってその分を固定する
   window.addEventListener("load", function () {
     const height = dimensions.totalHeight;
-    console.log("height at scroll.js", height);
     // cling header headerのz-indexを変更して、pinを使って固定する
-    const header = document.querySelector(`${config.target.header}`);
+    const header = document.querySelector(`#${config.target.header}`);
     header.style.position = "relative";
     header.style.zIndex = "1000";
     ScrollTrigger.create({
@@ -96,6 +96,26 @@ export default function scrollInit() {
       onEnter: () => {},
       onLeaveBack: () => {},
     });
+
+    // headerのviewportのtopにきたら透明度を変更するクラスを切り替える
+    function switchHeaderClass() {
+      const header = document.getElementById(config.target.header);
+      header.classList.add("Header--transparent");
+      ScrollTrigger.create({
+        trigger: header,
+        start: "top top",
+        end: 99999,
+        onEnter: () => {
+          console.log("onEnter");
+          header.classList.remove("Header--transparent");
+        },
+        onLeaveBack: () => {
+          console.log("onLeaveBack");
+          header.classList.add("Header--transparent");
+        },
+      });
+    }
+    switchHeaderClass();
 
     return { disablePlugin, enablePlugin };
   });
