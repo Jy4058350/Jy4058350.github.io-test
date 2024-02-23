@@ -1,8 +1,11 @@
 :root {
   --window-height: 0;
   --header-height: 0;
-  --header-is-not-transparent: 1;
+  --header-is-not-transparent: 0;
   --announcement-bar-height: 0px;
+  --header-margin-bottom: 0px;
+
+  --header-background: #ffffff;
 }
 
 .flickity-enabled.is-draggable {

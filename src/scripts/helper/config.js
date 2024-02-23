@@ -20,7 +20,7 @@ export const config = {
     rectWidth: "100",
     rectHeight: "10",
   },
-  buttonselector: "button.Header__Icon",
+  humbergerBtnSelector: "button.Header__Icon",
   logoeSelector: "Header__LogoImage",
   buttonParent: "Header__FlexItem",
   svgCart: "cart",
@@ -29,14 +29,15 @@ export const config = {
     cartPhone: "cartPhoneSvg",
   },
   color: {
-    header: "#ffffff",
+    white: "#ffffff",
+    black: "#000000",
   },
 
-  // root settings for slide
+  // root settings for slide targetに登録するのはidもしくはセマンティックタグであること
   target: {
     pageContainer: "page-container",
-    header: "header",
-    announcement: "AnnouncementBar__Content",
+    header: "section-header",
+    announcement: "section-announcement",
   },
   rootProperty: {
     headerHeight: "--header-height",

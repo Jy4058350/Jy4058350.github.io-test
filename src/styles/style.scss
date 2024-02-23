@@ -443,8 +443,60 @@ input.spr-button-primary::before,
 * ----------------------------------------------------------------------------------------------
 */
 
-.supports-sticky .Search[aria-hidden="true"] + .Header--transparent .Header__Icon svg {
-  filter: drop-shadow(0 1px rgba(0, 0, 0, 0.25));
+// .supports-sticky .Search[aria-hidden="true"] + .Header--transparent .Header__Icon svg {
+//   filter: drop-shadow(0 1px rgba(0, 0, 0, 0.25));
+// }
+
+// js制御ができるまでの一時的な対応
+.supports-sticky .Header--transparent {
+  box-shadow: 0 -1px rgba(255, 255, 255, 0.25) inset;
+  color: #ffffff;
+}
+
+// .supports-sticky .Search[aria-hidden=true]+.Header--transparent {
+//   background: transparent;
+// }
+// js制御ができるまでの一時的な対応
+.supports-sticky .Header--transparent {
+  background: transparent;
+}
+
+// .supports-sticky .Search[aria-hidden="true"] + .Header--transparent .Header__LogoImage--primary:not(:only-child) {
+//   opacity: 0;
+// }
+
+// .supports-sticky .Search[aria-hidden="true"] + .Header--transparent .Header__LogoImage--transparent {
+//   opacity: 1;
+// }
+
+// js制御ができるまでの一時的な対応
+// :not(:only-child)自体は純粋なCSSの機能です
+.supports-sticky .Header--transparent .Header__LogoImage--primary:not(:only-child) {
+  opacity: 0;
+}
+
+.supports-sticky .Header--transparent .Header__LogoImage--transparent {
+  opacity: 1;
+}
+
+.Header {
+  color: var(--header-heading-color);
+  background: var(--header-background);
+  box-shadow: 0 -1px var(--header-border-color) inset;
+  transition: background 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+// .supports-sticky .Search[aria-hidden="true"] + .Header--transparent .Header__Icon,
+// .supports-sticky .Search[aria-hidden="true"] + .Header--transparent .HorizontalList__Item > .SelectButton,
+// .supports-sticky .Search[aria-hidden="true"] + .Header--transparent .HorizontalList__Item > .Heading,
+// .supports-sticky .Search[aria-hidden="true"] + .Header--transparent .Header__LogoLink > .Heading {
+//   color: currentColor;
+// }
+// js制御ができるまでの一時的な対応
+.supports-sticky .Header--transparent .Header__Icon,
+.supports-sticky .Header--transparent .HorizontalList__Item > .SelectButton,
+.supports-sticky .Header--transparent .HorizontalList__Item > .Heading,
+.supports-sticky .Header--transparent .Header__LogoLink > .Heading {
+  color: currentColor;
 }
 
 .Header__Icon .Icon--nav {
@@ -521,10 +573,6 @@ input.spr-button-primary::before,
   top: 0;
   left: 0;
   opacity: 0;
-}
-
-.supports-sticky .Search[aria-hidden="true"] + .Header--transparent .Header__Icon svg {
-  filter: drop-shadow(0 1px rgba(0, 0, 0, 0.25));
 }
 
 fieldset {
