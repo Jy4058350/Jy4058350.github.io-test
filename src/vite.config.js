@@ -10,4 +10,12 @@ export default {
     }),
   ],
   assetsInclude: [],
+  build: {
+    rollupOptions: {
+      input: {
+        main: "./index.html",
+        flickity: "./flickity.html",
+      },
+    },
+  },
 };
