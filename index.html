@@ -3,9 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Practice cling header</title>
-    <script type="module" crossorigin src="./img/index-BcygnjmN.js"></script>
-    <link rel="stylesheet" crossorigin href="./img/index-D7h8Kziq.css">
+    <title>Practice Content Fade</title>
+    <script type="module" crossorigin src="./assets/main-QShqYUjB.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/flickity.min-CTdkuqEC.js">
+    <link rel="stylesheet" crossorigin href="./assets/flickity-BENuwZZ9.css">
+    <link rel="stylesheet" crossorigin href="./assets/main-CURs1Jbh.css">
   </head>
   <body class="features--heading-normal features--heading-uppercase">
     <div id="loader" class="Loader">
@@ -38,11 +40,11 @@
             </div>
             <div class="Header__FlexItem Header__FlexItem--logo">
               <h1 class="Header__Logo">
-                <a href="" class="Header__LogoLink">
-                  <img class="Header__LogoImage Header__LogoImage--primary" src="./img/logo-black-DQB6Rmqx.png" alt="" class="Header__LogoImage" />
+                <a href="./subhtml/flickity.html" class="Header__LogoLink">
+                  <img class="Header__LogoImage Header__LogoImage--primary" src="./assets/logo-black-DQB6Rmqx.png" alt="" class="Header__LogoImage" />
                   <img
                     class="Header__LogoImage Header__LogoImage--transparent"
-                    src="./img/logo-white-DNS165HN.png"
+                    src="./assets/logo-white-DNS165HN.png"
                     alt=""
                     class="Header__LogoImage Header__LogoImage--transparent"
                   />
@@ -58,6 +60,18 @@
         </header>
         <main id="main">
           <section id="section-1">
+            <div class="Slideshow Slideshow--fullscreen">
+              <div class="Slideshow-Carousel Carousel  Carousel--insideDots" >
+                <div class="Slideshow__Slide Carousel__Cell"></div>
+                <div class="Slideshow__Slide Carousel__Cell"></div>
+                <div class="Slideshow__Slide Carousel__Cell"></div>
+                <div class="Slideshow__Slide Carousel__Cell"></div>
+                <div class="Slideshow__Slide Carousel__Cell"></div>
+              </div>
+            </div>
+            <span id="section-1__slideshow-end" class="Anchor"></span>
+          </section>
+          <!-- <section id="section-1">
             <div class="Slideshow Slideshow--fullscreen">
               <div class="Slideshow__Carousel Carousel Carousel--fadeIn Carousel--fixed Carousel--insideDots flickity-enabled is-draggable">
                 <div class="flickity-viewport is-pointer-down">
@@ -179,26 +193,26 @@
               </div>
             </div>
             <span id="section-1__slideshow-end" class="Anchor"></span>
-          </section>
+          </section> -->
           <section id="section-2">
             <img
               data-webgl
               data-tex-1="./img/yamadera.jpeg"
-              src="./img/yamadera-DtHNMInO.jpeg"
+              src="./assets/yamadera-DtHNMInO.jpeg"
               data-tex-2="./img/sakuramich.jpeg"
               src="./public/img/sakuramich.jpeg"
             />
             <img
               data-webgl
               data-tex-1="./img/yamadera.jpeg"
-              src="./img/yamadera-DtHNMInO.jpeg"
+              src="./assets/yamadera-DtHNMInO.jpeg"
               data-tex-2="./img/sakuramich.jpeg"
               src="./public/img/sakuramich.jpeg"
             />
             <img
               data-webgl
               data-tex-1="./img/yamadera.jpeg"
-              src="./img/yamadera-DtHNMInO.jpeg"
+              src="./assets/yamadera-DtHNMInO.jpeg"
               data-tex-2="./img/sakuramich.jpeg"
               src="./public/img/sakuramich.jpeg"
             />
