@@ -106,11 +106,9 @@ export default function scrollInit() {
         start: "top top",
         end: 99999,
         onEnter: () => {
-          console.log("onEnter");
           header.classList.remove("Header--transparent");
         },
         onLeaveBack: () => {
-          console.log("onLeaveBack");
           header.classList.add("Header--transparent");
         },
       });

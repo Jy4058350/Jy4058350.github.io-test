@@ -24,7 +24,7 @@ function init() {
   $.loaderPercent = document.getElementById("Loader-percent");
   addProgressAction((progress, total) => {
     $.loaderPercent.innerHTML = percentage(progress, total) + "%";
-    console.log(progress, total);
+    // console.log(progress, total);
   });
 }
 
@@ -47,7 +47,7 @@ async function loadAllAssets() {
   textureCache.forEach((_, url) => {
     let prms = null;
     const loadFn = /\.(mp4|webm|mov)$/.test(url) ? loadVideo : loadImg;
-        prms = loadFn(url)
+    prms = loadFn(url)
       .then((tex) => {
         textureCache.set(url, tex);
       })
