@@ -38,6 +38,7 @@
   "dependencies": {
     "@typescript-eslint/parser": "^6.20.0",
     "flickity": "^3.0.0",
+    "flickity-fade": "^2.0.0",
     "glsl-easings": "^1.0.0",
     "glsl-hsl2rgb": "^1.1.0",
     "glsl-map": "^1.0.1",

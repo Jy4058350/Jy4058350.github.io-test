@@ -4,9 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script type="module" src="./scripts/index.js"></script>
-    <title>Practice spread entry point for html</title>
+    <title>Practice Content Fade</title>
     <link rel="stylesheet" href="./styles/loader.scss" />
     <link rel="stylesheet" href="./styles/style.scss" />
+    <link rel="stylesheet" href="./styles/flickity.min.css" />
   </head>
   <body class="features--heading-normal features--heading-uppercase">
     <div id="loader" class="Loader">
@@ -39,7 +40,7 @@
             </div>
             <div class="Header__FlexItem Header__FlexItem--logo">
               <h1 class="Header__Logo">
-                <a href="./flickity.html" class="Header__LogoLink">
+                <a href="./subhtml/flickity.html" class="Header__LogoLink">
                   <img class="Header__LogoImage Header__LogoImage--primary" src="./public/logo-black.png" alt="" class="Header__LogoImage" />
                   <img
                     class="Header__LogoImage Header__LogoImage--transparent"
@@ -60,149 +61,15 @@
         <main id="main">
           <section id="section-1">
             <div class="Slideshow Slideshow--fullscreen">
-              <div class="Slideshow__Carousel Carousel Carousel--fadeIn Carousel--fixed Carousel--insideDots flickity-enabled is-draggable">
-                <div class="flickity-viewport is-pointer-down">
-                  <div class="flickity-slider">
-                    <div class="Slideshow__Slide Carousel__Cell is-selected">
-                      <div class="Slideshow__ImageContainer hidden-tablet-and-up">
-                        <img src="./public/img/yamadera.jpeg" alt="" class="Slideshow__Image Image--lazyLoaded" />
-                        <noscript> <img src="./public/img/yamadera.jpeg" alt="" class="Slideshow__Image Image--lazyLoaded" /></noscript>
-                      </div>
-                      <div class="Slideshow__ImageContainer hidden-phone">
-                        <img src="./public/img/sakuramich.jpeg" alt="" class="Slideshow__Image Image--lazyLoaded hide-no-js lazyaotosizes" />
-                        <noscript> <img src="./public/img/sakuramich.jpeg" alt="" class="Slideshow__Image Image--lazyLoaded" /></noscript>
-                      </div>
-                      <div class="Slideshow__Content Slideshow__Content--bottomLeft">
-                        <header class="SectionHeader">
-                          <h3 class="SectionHeader__SubHeader Heading u-h6">2024.02/09</h3>
-                          <h2 class="SectionHeader__Heading Section__Heading--emphasize Heading u-h1">FEB DELIVERY #1</h2>
-                          <div class="SectionHeader__ButtonWrapper">
-                            <div class="ButtonGroup ButtonGroup--spacingSmall">
-                              <a href="" class="ButtonGroup__Item Button">READ MORE</a>
-                            </div>
-                          </div>
-                        </header>
-                      </div>
-                    </div>
-                    <div class="Slideshow__Slide Carousel__Cell">
-                      <div class="Slideshow__ImageContainer hidden-tablet-and-up">
-                        <img src="./public/img/yamadera.jpeg" alt="" class="Slideshow__Image Image--lazyLoaded" />
-                        <noscript> <img src="./public/img/yamadera.jpeg" alt="" class="Slideshow__Image Image--lazyLoaded" /></noscript>
-                      </div>
-                      <div class="Slideshow__ImageContainer hidden-phone">
-                        <img src="./public/img/sakuramich.jpeg" alt="" class="Slideshow__Image Image--lazyLoaded" />
-                        <noscript> <img src="./public/img/sakuramich.jpeg" alt="" class="Slideshow__Image Image--lazyLoaded" /></noscript>
-                      </div>
-                      <div class="Slideshow__Content Slideshow__Content--bottomLeft">
-                        <header class="SectionHeader">
-                          <h3 class="SectionHeader__SubHeader Heading u-h6">2024.02/09</h3>
-                          <h2 class="SectionHeader__Heading Section__Heading--emphasize Heading u-h1">FEB DELIVERY #1</h2>
-                          <div class="SectionHeader__ButtonWrapper">
-                            <div class="ButtonGroup ButtonGroup--spacingSmall">
-                              <a href="" class="ButtonGroup__Item Button">READ MORE</a>
-                            </div>
-                          </div>
-                        </header>
-                      </div>
-                    </div>
-                    <div class="Slideshow__Slide Carousel__Cell">
-                      <div class="Slideshow__ImageContainer hidden-tablet-and-up">
-                        <img src="./public/img/yamadera.jpeg" alt="" class="Slideshow__Image Image--lazyLoaded" />
-                        <noscript> <img src="./public/img/yamadera.jpeg" alt="" class="Slideshow__Image Image--lazyLoaded" /></noscript>
-                      </div>
-                      <div class="Slideshow__ImageContainer hidden-phone">
-                        <img src="./public/img/sakuramich.jpeg" alt="" class="Slideshow__Image Image--lazyLoaded" />
-                        <noscript> <img src="./public/img/sakuramich.jpeg" alt="" class="Slideshow__Image Image--lazyLoaded" /></noscript>
-                      </div>
-                      <div class="Slideshow__Content Slideshow__Content--bottomLeft">
-                        <header class="SectionHeader">
-                          <h3 class="SectionHeader__SubHeader Heading u-h6">2024.02/09</h3>
-                          <h2 class="SectionHeader__Heading Section__Heading--emphasize Heading u-h1">FEB DELIVERY #1</h2>
-                          <div class="SectionHeader__ButtonWrapper">
-                            <div class="ButtonGroup ButtonGroup--spacingSmall">
-                              <a href="" class="ButtonGroup__Item Button">READ MORE</a>
-                            </div>
-                          </div>
-                        </header>
-                      </div>
-                    </div>
-                    <div class="Slideshow__Slide Carousel__Cell">
-                      <div class="Slideshow__ImageContainer hidden-tablet-and-up">
-                        <img src="./public/img/yamadera.jpeg" alt="" class="Slideshow__Image Image--lazyLoaded" />
-                        <noscript> <img src="./public/img/yamadera.jpeg" alt="" class="Slideshow__Image Image--lazyLoaded" /></noscript>
-                      </div>
-                      <div class="Slideshow__ImageContainer hidden-phone">
-                        <img src="./public/img/sakuramich.jpeg" alt="" class="Slideshow__Image Image--lazyLoaded" />
-                        <noscript> <img src="./public/img/sakuramich.jpeg" alt="" class="Slideshow__Image Image--lazyLoaded" /></noscript>
-                      </div>
-                      <div class="Slideshow__Content Slideshow__Content--bottomLeft">
-                        <header class="SectionHeader">
-                          <h3 class="SectionHeader__SubHeader Heading u-h6">2024.02/09</h3>
-                          <h2 class="SectionHeader__Heading Section__Heading--emphasize Heading u-h1">FEB DELIVERY #1</h2>
-                          <div class="SectionHeader__ButtonWrapper">
-                            <div class="ButtonGroup ButtonGroup--spacingSmall">
-                              <a href="" class="ButtonGroup__Item Button">READ MORE</a>
-                            </div>
-                          </div>
-                        </header>
-                      </div>
-                    </div>
-                    <div class="Slideshow__Slide Carousel__Cell">
-                      <div class="Slideshow__ImageContainer hidden-tablet-and-up">
-                        <img src="./public/img/yamadera.jpeg" alt="" class="Slideshow__Image Image--lazyLoaded" />
-                        <noscript> <img src="./public/img/yamadera.jpeg" alt="" class="Slideshow__Image Image--lazyLoaded" /></noscript>
-                      </div>
-                      <div class="Slideshow__ImageContainer hidden-phone">
-                        <img src="./public/img/sakuramich.jpeg" alt="" class="Slideshow__Image Image--lazyLoaded" />
-                        <noscript> <img src="./public/img/sakuramich.jpeg" alt="" class="Slideshow__Image Image--lazyLoaded" /></noscript>
-                      </div>
-                      <div class="Slideshow__Content Slideshow__Content--bottomLeft">
-                        <header class="SectionHeader">
-                          <h3 class="SectionHeader__SubHeader Heading u-h6">2024.02/09</h3>
-                          <h2 class="SectionHeader__Heading Section__Heading--emphasize Heading u-h1">FEB DELIVERY #1</h2>
-                          <div class="SectionHeader__ButtonWrapper">
-                            <div class="ButtonGroup ButtonGroup--spacingSmall">
-                              <a href="" class="ButtonGroup__Item Button">READ MORE</a>
-                            </div>
-                          </div>
-                        </header>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <ol class="flickity-page-dots">
-                  <li class="dot is-selected"></li>
-                  <li class="dot"></li>
-                  <li class="dot"></li>
-                  <li class="dot"></li>
-                  <li class="dot"></li>
-                </ol>
+              <div class="Slideshow-Carousel Carousel Carousel--insideDots">
+                <div class="Slideshow__Slide Carousel__Cell"></div>
+                <div class="Slideshow__Slide Carousel__Cell"></div>
+                <div class="Slideshow__Slide Carousel__Cell"></div>
+                <div class="Slideshow__Slide Carousel__Cell"></div>
+                <div class="Slideshow__Slide Carousel__Cell"></div>
               </div>
             </div>
             <span id="section-1__slideshow-end" class="Anchor"></span>
-          </section>
-          <section id="section-2">
-            <img
-              data-webgl
-              data-tex-1="./img/yamadera.jpeg"
-              src="./public/img/yamadera.jpeg"
-              data-tex-2="./img/sakuramich.jpeg"
-              src="./public/img/sakuramich.jpeg"
-            />
-            <img
-              data-webgl
-              data-tex-1="./img/yamadera.jpeg"
-              src="./public/img/yamadera.jpeg"
-              data-tex-2="./img/sakuramich.jpeg"
-              src="./public/img/sakuramich.jpeg"
-            />
-            <img
-              data-webgl
-              data-tex-1="./img/yamadera.jpeg"
-              src="./public/img/yamadera.jpeg"
-              data-tex-2="./img/sakuramich.jpeg"
-              src="./public/img/sakuramich.jpeg"
-            />
           </section>
         </main>
         <style>
