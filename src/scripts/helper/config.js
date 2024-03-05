@@ -7,18 +7,16 @@ export const config = {
   },
 
   phone: {
-    viewBox: "0 0 100 80",
-    width: "30",
-    height: "30",
-    rectWidth: "100",
-    rectHeight: "3",
+    width: "20",
+    height: "15",
+    rectWidth: "20",
+    rectHeight: "1",
   },
   tabletAndUp: {
-    viewBox: "0 0 100 80",
     width: "30",
-    height: "30",
-    rectWidth: "100",
-    rectHeight: "10",
+    height: "25",
+    rectWidth: "30",
+    rectHeight: "2",
   },
   humbergerBtnSelector: "button.Header__Icon",
   logoeSelector: "Header__LogoImage",
@@ -28,6 +26,12 @@ export const config = {
     cartDesktop: "cartDesktopSvg",
     cartPhone: "cartPhoneSvg",
   },
+
+  logo: {
+    white: "./logo-white.png",
+    black: "./logo-black.png",
+  },
+
   color: {
     white: "#ffffff",
     black: "#000000",
