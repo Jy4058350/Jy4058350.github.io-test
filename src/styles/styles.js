@@ -14,6 +14,8 @@ const BUTTON_PARENT = config.buttonParent;
 const SVG_CART = config.svgCart;
 const ROGO_WHITE = config.logo.white;
 const ROGO_BLACK = config.logo.black;
+const ROGO_PHONE = config.logo.phone;
+const ROGO_TABLET = config.logo.tablet;
 const WHITE = config.color.white;
 const BLACK = config.color.black;
 const PAGE = config.target.pageContainer;
@@ -355,7 +357,7 @@ function headerSettings() {
   addMenuBtn(iconConfig);
   const svgPath = isDesktopView(BREAKPOINT_WIDTH) ? cartDesktopSvg : cartPhoneSvg;
   createCart(svgPath);
-  const logoConfig = isDesktopView(BREAKPOINT_WIDTH) ? "28px" : "18px";
+  const logoConfig = isDesktopView(BREAKPOINT_WIDTH) ? ROGO_TABLET : ROGO_PHONE;
   addLogo(logoConfig);
 }
 

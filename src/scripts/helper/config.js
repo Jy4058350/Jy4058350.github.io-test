@@ -30,6 +30,8 @@ export const config = {
   logo: {
     white: "./logo-white.png",
     black: "./logo-black.png",
+    phone: "18px",
+    tablet: "24px",
   },
 
   color: {
