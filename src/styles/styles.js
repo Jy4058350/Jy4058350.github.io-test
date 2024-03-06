@@ -2,7 +2,7 @@ import Flickity from "flickity-fade";
 import { config, isDesktopView } from "../scripts/helper";
 import cartPhoneSvg from "../svg/cart_phone.js";
 import cartDesktopSvg from "../svg/cart_desktop.js";
-import { create } from "lodash";
+import { create, set } from "lodash";
 
 // import scrollInit from "../scripts/component/scroll.js";
 
@@ -39,23 +39,23 @@ export default (function () {
 
     slideSettings();
 
-    let resizeTimeout;
-    window.addEventListener("resize", function () {
-      this.clearTimeout(resizeTimeout);
+    // let resizeTimeout;
+    // window.addEventListener("resize", function () {
+    //   this.clearTimeout(resizeTimeout);
 
-      resizeTimeout = this.setTimeout(function () {
-        const pinSpacer = document.querySelector(".pin-spacer");
-        const header = document.getElementById(HEADER);
-        if (pinSpacer) {
-          const width = window.innerWidth;
-          console.log("width", width);
-          pinSpacer.style.width = width + "px";
-          pinSpacer.style.maxWidth = width + "px";
-          header.style.width = width + "px";
-          header.style.maxWidth = width + "px";
-        }
-      }, 100);
-    });
+    //   resizeTimeout = this.setTimeout(function () {
+    //     const pinSpacer = document.querySelector(".pin-spacer");
+    //     const header = document.getElementById(HEADER);
+    //     if (pinSpacer) {
+    //       const width = window.innerWidth;
+    //       console.log("width", width);
+    //       pinSpacer.style.width = width + "px";
+    //       pinSpacer.style.maxWidth = width + "px";
+    //       header.style.width = width + "px";
+    //       header.style.maxWidth = width + "px";
+    //     }
+    //   }, 100);
+    // });
   });
 })();
 
@@ -445,10 +445,19 @@ async function createCart(svgData) {
 
 // Add event listener to window resize
 let resizeTimeout;
-window.addEventListener("resize", handleResize);
-window.addEventListener("orientationchange", handleResize);
+// window.addEventListener("resize", handleResize);
+window.addEventListener("resize", function () {
+  console.log("Window resized");
+  handleResize();
+});
+// window.addEventListener("orientationchange", handleResize);
+window.addEventListener("orientationchange", function () {
+  console.log("Orientation changed");
+  handleResize();
+});
 
 function handleResize() {
+  console.log("Resize event");
   clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(async () => {
     const typeDevice = isDesktopView(BREAKPOINT_WIDTH) ? TABLETANDUP : PHONE;
@@ -462,8 +471,24 @@ function handleResize() {
       imgElement.style.height = logoConfig;
     });
 
+    setPinSpacerWidth();
+
     adjustElements();
   }, DEBOUNCE_TIME);
+}
+
+// pinSpacerの幅を設定する
+function setPinSpacerWidth() {
+  const pinSpacer = document.querySelector(".pin-spacer");
+  const header = document.getElementById(HEADER);
+  if (pinSpacer) {
+    const width = window.innerWidth;
+    console.log("width", width);
+    pinSpacer.style.width = width + "px";
+    pinSpacer.style.maxWidth = width + "px";
+    header.style.width = width + "px";
+    header.style.maxWidth = width + "px";
+  }
 }
 
 function clearElementChildren(element) {
