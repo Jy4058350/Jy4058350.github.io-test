@@ -38,6 +38,24 @@ export default (function () {
     headerSettings();
 
     slideSettings();
+
+    let resizeTimeout;
+    window.addEventListener("resize", function () {
+      this.clearTimeout(resizeTimeout);
+
+      resizeTimeout = this.setTimeout(function () {
+        const pinSpacer = document.querySelector(".pin-spacer");
+        const header = document.getElementById(HEADER);
+        if (pinSpacer) {
+          const width = window.innerWidth;
+          console.log("width", width);
+          pinSpacer.style.width = width + "px";
+          pinSpacer.style.maxWidth = width + "px";
+          header.style.width = width + "px";
+          header.style.maxWidth = width + "px";
+        }
+      }, 100);
+    });
   });
 })();
 
