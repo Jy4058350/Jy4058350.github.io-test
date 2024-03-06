@@ -523,6 +523,8 @@ input.spr-button-primary::before,
 
 .Header__FlexItem--fill {
   flex: 1 0 0;
+  flex-grow: 1;
+  flex-shrink: 0;
   align-items: center;
 }
 
