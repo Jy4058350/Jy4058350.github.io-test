@@ -443,17 +443,23 @@ async function createCart(svgData) {
   }
 }
 
+/********************************************
+ * リサイズの設定
+ ********************************************/
+
 // Add event listener to window resize
 let resizeTimeout;
-// window.addEventListener("resize", handleResize);
+
 window.addEventListener("resize", function () {
   console.log("Window resized");
   handleResize();
+  viewportSettings();
 });
-// window.addEventListener("orientationchange", handleResize);
+
 window.addEventListener("orientationchange", function () {
   console.log("Orientation changed");
   handleResize();
+  viewportSettings();
 });
 
 function handleResize() {
@@ -590,9 +596,6 @@ function viewportSettings() {
   if (pageContainer) pageContainer.style.height = `${viewportHeight}px`;
   setElementHeight("--window-height", viewportHeight);
 }
-
-// ウィンドウサイズが変更されたときに再度実行
-window.addEventListener("resize", viewportSettings);
 
 // css変数をload時に設定する
 window.addEventListener("load", function () {
