@@ -2,6 +2,7 @@ import Flickity from "flickity-fade";
 import { config, isDesktopView } from "../scripts/helper";
 import cartPhoneSvg from "../svg/cart_phone.js";
 import cartDesktopSvg from "../svg/cart_desktop.js";
+import { create, set } from "lodash";
 
 // import scrollInit from "../scripts/component/scroll.js";
 
@@ -11,6 +12,10 @@ const HUMBERGER_SELECTOR = config.humbergerBtnSelector;
 const LOGOE_SELECTOR = config.logoeSelector;
 const BUTTON_PARENT = config.buttonParent;
 const SVG_CART = config.svgCart;
+const ROGO_WHITE = config.logo.white;
+const ROGO_BLACK = config.logo.black;
+const ROGO_PHONE = config.logo.phone;
+const ROGO_TABLET = config.logo.tablet;
 const WHITE = config.color.white;
 const BLACK = config.color.black;
 const PAGE = config.target.pageContainer;
@@ -33,6 +38,24 @@ export default (function () {
     headerSettings();
 
     slideSettings();
+
+    // let resizeTimeout;
+    // window.addEventListener("resize", function () {
+    //   this.clearTimeout(resizeTimeout);
+
+    //   resizeTimeout = this.setTimeout(function () {
+    //     const pinSpacer = document.querySelector(".pin-spacer");
+    //     const header = document.getElementById(HEADER);
+    //     if (pinSpacer) {
+    //       const width = window.innerWidth;
+    //       console.log("width", width);
+    //       pinSpacer.style.width = width + "px";
+    //       pinSpacer.style.maxWidth = width + "px";
+    //       header.style.width = width + "px";
+    //       header.style.maxWidth = width + "px";
+    //     }
+    //   }, 100);
+    // });
   });
 })();
 
@@ -52,7 +75,7 @@ function flickityInit() {
     setGallerySize: false,
     adaptiveHeight: false,
     wrapAround: true,
-    dragThreshold: 10,
+    dragThreshold: 15,
     pauseAutoPlayOnHover: false,
     autoPlay: false,
     pageDots: true,
@@ -285,12 +308,75 @@ function getTitle() {
   return title;
 }
 
-// ヘッダーの設定
+/********************************************
+ * ヘッダーの設定
+ ********************************************/
+
+// rogoのimg要素を動的に作成する
+function addLogo(logoConfig) {
+  logoChildElement(logoConfig);
+  const logs = [
+    { src: ROGO_BLACK, alt: "logo" },
+    { src: ROGO_WHITE, alt: "logo" },
+  ];
+  logs.forEach((log) => createImg(log.src, log.alt));
+}
+// FlexItem--logoの子要素を作成する
+function logoChildElement(logoConfig) {
+  const logoParent = document.querySelector(".Header__FlexItem--logo");
+  const h1 = document.createElement("h1");
+  h1.classList.add("Header__Logo");
+  logoParent.appendChild(h1);
+  getA(h1, logoConfig);
+}
+
+// a要素を取得して、a要素の親要素を取得
+function getA(h1, logoConfig) {
+  console.log(logoConfig);
+  const a = document.querySelector(".Header__LogoLink");
+
+  // a要素の親要素を取得
+  const parent = a.parentElement;
+
+  // a要素をh1要素の子要素に追加する
+  h1.appendChild(a);
+
+  // h1要素をa要素の元の位置に挿入
+  parent.appendChild(h1);
+
+  // img要素を2つ作成する
+  const img1 = document.createElement("img");
+  img1.className = "Header__LogoImage Header__LogoImage--primary";
+  img1.alt = "";
+  img1.style.height = logoConfig;
+
+  const img2 = document.createElement("img");
+  img2.className = "Header__LogoImage Header__LogoImage--transparent";
+  img2.alt = "";
+  img2.style.height = logoConfig;
+
+  // a要素の中にimg要素を追加
+  a.appendChild(img1);
+  a.appendChild(img2);
+}
+
+// img要素を作成する
+function createImg(src, alt) {
+  // const imgElements = [document.querySelector(".Header__LogoImage--primary"), document.querySelector(".Header__LogoImage--transparent")];
+  const imgElement = document.querySelector(`.Header__LogoImage--${src === ROGO_BLACK ? "primary" : "transparent"}`);
+  // 上記書き直しました
+  imgElement.src = src;
+  imgElement.alt = alt;
+}
+
+// ヘッダー要素ここでADDしたものをアップデートする
 function headerSettings() {
   const iconConfig = isDesktopView(BREAKPOINT_WIDTH) ? TABLETANDUP : PHONE;
   addMenuBtn(iconConfig);
   const svgPath = isDesktopView(BREAKPOINT_WIDTH) ? cartDesktopSvg : cartPhoneSvg;
   createCart(svgPath);
+  const logoConfig = isDesktopView(BREAKPOINT_WIDTH) ? ROGO_TABLET : ROGO_PHONE;
+  addLogo(logoConfig);
 }
 
 // fecth関数は開発サーバー（npm run dev）で実行するときはローカルファイルを読み込むことができますが、ビルド後の静的なHTMLファイル（npm run build）では同じ動作をしない。
@@ -357,12 +443,27 @@ async function createCart(svgData) {
   }
 }
 
+/********************************************
+ * リサイズの設定
+ ********************************************/
+
 // Add event listener to window resize
 let resizeTimeout;
-window.addEventListener("resize", handleResize);
-window.addEventListener("orientationchange", handleResize);
+
+window.addEventListener("resize", function () {
+  console.log("Window resized");
+  handleResize();
+  viewportSettings();
+});
+
+window.addEventListener("orientationchange", function () {
+  console.log("Orientation changed");
+  handleResize();
+  viewportSettings();
+});
 
 function handleResize() {
+  console.log("Resize event");
   clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(async () => {
     const typeDevice = isDesktopView(BREAKPOINT_WIDTH) ? TABLETANDUP : PHONE;
@@ -370,8 +471,36 @@ function handleResize() {
     const svgPath = isDesktopView(BREAKPOINT_WIDTH) ? cartDesktopSvg : cartPhoneSvg;
     await createCart(svgPath);
 
+    const logoConfig = isDesktopView(BREAKPOINT_WIDTH) ? "28px" : "18px";
+    const imgElements = document.querySelectorAll(".Header__LogoImage");
+    imgElements.forEach((imgElement) => {
+      imgElement.style.height = logoConfig;
+    });
+
+    setPinSpacerWidth();
+
     adjustElements();
   }, DEBOUNCE_TIME);
+}
+
+// pinSpacerの幅を設定する
+function setPinSpacerWidth() {
+  const pinSpacer = document.querySelector(".pin-spacer");
+  const header = document.getElementById(HEADER);
+  if (pinSpacer) {
+    const width = document.documentElement.clientWidth;
+    console.log("width", width);
+    pinSpacer.style.width = width + "px";
+    pinSpacer.style.maxWidth = width + "px";
+    header.style.width = width + "px";
+    header.style.maxWidth = width + "px";
+  }
+}
+
+if (window.screen && window.screen.orientation) {
+  window.screen.orientation.addEventListener("change", function () {
+    console.log("Screen orientation changed:", window.screen.orientation.type);
+  });
 }
 
 function clearElementChildren(element) {
@@ -382,18 +511,19 @@ function clearElementChildren(element) {
 // ハンバーガーメニューのスタイル以外のアイコンSVG要素を作成する（表示領域、幅、高さ）
 function createSvgBace(viewBox, width, height) {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute("viewBox", viewBox);
+  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
   svg.setAttribute("width", width);
   svg.setAttribute("height", height);
   return svg;
 }
 // ハンバーガーメニューのスタイルを作成する
 function createRectangles(svg, height, rectWidth, rectHeight) {
+  const gap = (height - rectHeight * 3) / 2; // バー間の間隔を計算する
   for (let i = 0; i < 3; i++) {
     const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
     rect.setAttribute("width", rectWidth);
     rect.setAttribute("height", rectHeight);
-    rect.setAttribute("y", i * parseInt(height));
+    rect.setAttribute("y", i * (parseInt(rectHeight) + gap)); // バーのy座標を設定する
     rect.setAttribute("fill", "currentColor");
     svg.appendChild(rect);
   }
@@ -457,8 +587,8 @@ function adjustElements() {
   const btnParent = document.querySelector(`.${BUTTON_PARENT}`);
   const btnParentHeight = btnParent.offsetHeight;
 
+  // logだけは高さを固定しました。
   const logos = document.querySelectorAll(`.${LOGOE_SELECTOR}`);
-  logos.forEach((logo) => adjustElementToHeight(logo, btnParentHeight));
 
   const cartParent = document.querySelector(`.${SVG_CART}`);
   adjustElementToHeight(cartParent, btnParentHeight);
@@ -472,9 +602,6 @@ function viewportSettings() {
   if (pageContainer) pageContainer.style.height = `${viewportHeight}px`;
   setElementHeight("--window-height", viewportHeight);
 }
-
-// ウィンドウサイズが変更されたときに再度実行
-window.addEventListener("resize", viewportSettings);
 
 // css変数をload時に設定する
 window.addEventListener("load", function () {

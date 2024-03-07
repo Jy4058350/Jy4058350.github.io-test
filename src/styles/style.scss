@@ -484,6 +484,8 @@ input.spr-button-primary::before,
   background: var(--header-background);
   box-shadow: 0 -1px var(--header-border-color) inset;
   transition: background 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  width: 100%;
+  max-width: 100%;
 }
 // .supports-sticky .Search[aria-hidden="true"] + .Header--transparent .Header__Icon,
 // .supports-sticky .Search[aria-hidden="true"] + .Header--transparent .HorizontalList__Item > .SelectButton,
@@ -523,6 +525,8 @@ input.spr-button-primary::before,
 
 .Header__FlexItem--fill {
   flex: 1 0 0;
+  flex-grow: 1;
+  flex-shrink: 0;
   align-items: center;
 }
 
