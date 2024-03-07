@@ -471,7 +471,7 @@ function handleResize() {
       imgElement.style.height = logoConfig;
     });
 
-    setPinSpacerWidth();
+    // setPinSpacerWidth();
 
     adjustElements();
   }, DEBOUNCE_TIME);
