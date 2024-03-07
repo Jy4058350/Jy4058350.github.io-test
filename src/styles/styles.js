@@ -471,7 +471,7 @@ function handleResize() {
       imgElement.style.height = logoConfig;
     });
 
-    // setPinSpacerWidth();
+    setPinSpacerWidth();
 
     adjustElements();
   }, DEBOUNCE_TIME);
@@ -482,7 +482,7 @@ function setPinSpacerWidth() {
   const pinSpacer = document.querySelector(".pin-spacer");
   const header = document.getElementById(HEADER);
   if (pinSpacer) {
-    const width = window.innerWidth;
+    const width = document.documentElement.clientWidth;
     console.log("width", width);
     pinSpacer.style.width = width + "px";
     pinSpacer.style.maxWidth = width + "px";
