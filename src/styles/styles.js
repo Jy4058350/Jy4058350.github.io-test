@@ -497,6 +497,28 @@ function setPinSpacerWidth() {
   }
 }
 
+const mql = window.matchMedia("(orientation: portrait)");
+
+// 初期の向きをチェック
+if (mql.matches) {
+  // 縦向き
+  handleResize();
+} else {
+  // 横向き
+  handleResize();
+}
+
+// 向きの変更を監視
+mql.addEventListener("change", (e) => {
+  if (e.matches) {
+    // 縦向き
+    handleResize();
+  } else {
+    // 横向き
+    handleResize();
+  }
+});
+
 function clearElementChildren(element) {
   while (element.firstChild) {
     element.removeChild(element.firstChild);
