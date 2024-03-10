@@ -307,13 +307,6 @@
   color: #ffffff;
 }
 
-// js制御ができるまでの一時的な対応
-.SectionHeader__ButtonWrapper {
-  visibility: inherit;
-  opacity: 1;
-  transform: matrix(1, 0, 0, 1, 0, 0);
-}
-
 .Slideshow__Content--middleLeft .ButtonGroup,
 .Slideshow__Content--bottomLeft .ButtonGroup {
   justify-content: flex-start;

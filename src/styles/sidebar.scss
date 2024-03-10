@@ -1,0 +1,161 @@
+:root {
+  --navigation-text-color: #2b2b2b;
+  --navigation-background: #f8f8f7;
+
+  --drawer-transition-timing: cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * Base drawer
+ * ----------------------------------------------------------------------------
+ */
+
+.Drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 20;
+  width: calc(100vw - 65px); /* Interestingly, 100% does not work on iOS 9 and lower */
+  height: 100vh;
+  max-height: none;
+  touch-action: manipulation; /* Animating box-shadow is slow, even on modern browsers, so we instead move it in a pseudo-element and animate opacity */
+  visibility: hidden;
+  background: var(--background);
+  box-shadow: none;
+  transition: transform 0.5s var(--drawer-transition-timing), visibility 0.5s var(--drawer-transition-timing);
+}
+
+.Drawer[aria-hidden="false"] {
+  visibility: visible;
+  transform: translateX(0);
+}
+
+.Drawer--fromLeft {
+  transform: translateX(calc(-100vw + 65px));
+}
+
+@media screen and (min-width: 641px) {
+  .Drawer {
+    width: 400px;
+    transform: translateX(-100%);
+  }
+}
+
+.SidebarMenu {
+  height: 100%;
+  color: var(--navigation-text-color);
+  background: var(--navigation-background);
+}
+
+.Icon-Wrapper--clickable {
+  position: relative;
+  background: transparent; /* This is used to increase the clickable area */
+}
+
+.Drawer__Container {
+  width: 100%;
+}
+
+.Drawer__Header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  height: 50px;
+  max-height: 60px;
+  text-align: center;
+  background: inherit;
+}
+
+@supports (--css: variables) {
+  .Drawer__Header {
+    height: var(--header-height);
+  }
+}
+
+.Drawer__Close {
+  position: absolute;
+  top: calc(50% - 7px);
+  left: 18px;
+  margin-left: 0;
+  line-height: 0;
+  color: black;
+}
+
+.Drawer__Close svg {
+  // 修正点　inline-blockにしないとサイズが効かない
+  //   display: inline-block;
+
+  width: 15px;
+  height: 15px;
+  stroke-width: 1.25px;
+
+  color: black;
+}
+
+.Drawer__Close {
+  left: 30px;
+}
+
+.Drawer__Content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 60px);
+  max-height: calc(
+    100% - 50px
+  ); /* This handles an edge case when the header is much bigger than the maximum size for content, but this only works on Safari as of today */
+  overflow: hidden;
+}
+
+@supports (--css: variables) {
+  .Drawer__Content {
+    height: calc(100% - var(--header-height));
+    max-height: calc(100% - var(--header-height));
+  }
+}
+
+@supports (width: calc(max(100%))) {
+  .Drawer__Content {
+    height: max(calc(100% - var(--header-height)), calc(100% - 60px));
+    max-height: max(calc(100% - var(--header-height)), calc(100% - 60px));
+  }
+}
+
+.Drawer__Main {
+  flex: 1 1 auto;
+}
+
+.Drawer--small {
+  width: 340px;
+}
+
+.Drawer__Search {
+  position: absolute;
+  top: calc(50% - 7px);
+  right: 30px;
+  width: 15px;
+  height: 15px;
+  margin-right: 0;
+  line-height: 0;
+}
+
+.SidebarMenu .Drawer__Content::before,
+.SidebarMenu .Drawer__Footer::before {
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+  pointer-events: none;
+  content: "";
+}
+.SidebarMenu .Drawer__Content::before {
+  top: 0;
+  height: 25px;
+  background-image: linear-gradient(var(--navigation-background), rgba(var(--navigation-background-rgb), 0.6) 40%, rgba(var(--navigation-background-rgb), 0));
+}
+
+.SidebarMenu .Heading,
+.supports-hover .SidebarMenu .Link--primary:hover {
+  color: var(--navigation-text-color);
+}
