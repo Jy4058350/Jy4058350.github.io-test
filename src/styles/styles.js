@@ -2,7 +2,8 @@ import Flickity from "flickity-fade";
 import { config, isDesktopView } from "../scripts/helper";
 import cartPhoneSvg from "../svg/cart_phone.js";
 import cartDesktopSvg from "../svg/cart_desktop.js";
-import { create, set } from "lodash";
+import closeButtonData from "../svg/closeButton.js";
+import searchButton from "../svg/searchButton.js";
 
 // import scrollInit from "../scripts/component/scroll.js";
 
@@ -31,33 +32,95 @@ const PHONE = config.phone;
 // Check if the current view is desktop or not using the helper function
 isDesktopView(BREAKPOINT_WIDTH);
 
-export default (function () {
-  document.addEventListener("DOMContentLoaded", function () {
+export function init() {
+  document.addEventListener("DOMContentLoaded", async function () {
     getTitle();
     viewportSettings();
-    headerSettings();
-
+    await headerSettings();
     slideSettings();
 
-    // let resizeTimeout;
-    // window.addEventListener("resize", function () {
-    //   this.clearTimeout(resizeTimeout);
-
-    //   resizeTimeout = this.setTimeout(function () {
-    //     const pinSpacer = document.querySelector(".pin-spacer");
-    //     const header = document.getElementById(HEADER);
-    //     if (pinSpacer) {
-    //       const width = window.innerWidth;
-    //       console.log("width", width);
-    //       pinSpacer.style.width = width + "px";
-    //       pinSpacer.style.maxWidth = width + "px";
-    //       header.style.width = width + "px";
-    //       header.style.maxWidth = width + "px";
-    //     }
-    //   }, 100);
-    // });
+    sidebarSettings();
   });
-})();
+}
+
+/********************************************
+ * sidebarの設定
+ ********************************************/
+
+function sidebarSettings() {
+  closeButtonInit(closeButtonData);
+  searchButtonInit(searchButton);
+}
+
+// 虫眼鏡ボタンの設定をする
+function searchButtonInit(svgData) {
+  getSvgdata(svgData, "Drawer__Search", ["Icon", "Icon--search"]);
+}
+
+// closeボタンの設定をする
+function closeButtonInit(svgData) {
+  getSvgdata(svgData, "Drawer__Close",["Icon", "Icon--close"]);
+  const sidebar = document.getElementById("sidebar-menu");
+  // aria-hidden属性を設定する(要素をスクリーンリーダーから隠す)
+  sidebar.setAttribute("aria-hidden", true);
+  // aria-hidden属性をfalseに設定する(要素をスクリーンリーダーから表示する)
+  // sidebar.setAttribute("aria-hidden", false);
+  btnClick(sidebar);
+  btnCloseClick(sidebar, "Drawer__Close");
+}
+
+async function getSvgdata(svgData, parent, classNames) {
+  const svgParent = document.querySelector(`.${parent}`);
+  clearSvgParent(svgParent);
+
+  // SVGデータの解析してsvg要素作成する
+  async function parseSvgData(data) {
+    const parser = new DOMParser();
+    const svgDoc = parser.parseFromString(data, "image/svg+xml");
+    const svgElement = svgDoc.querySelector("svg");
+
+    if (!svgElement) {
+      throw new Error(`No SVG element found in the provided data: ${data}`);
+    }
+
+    const pathElements = svgElement.querySelectorAll("path");
+    pathElements.forEach((pathElement) => {
+      pathElement.setAttribute("fill", "none");
+      pathElement.setAttribute("stroke-width", "1.5"); // Add this line
+      pathElement.setAttribute("stroke", "currentColor"); // Add this line
+    });
+    return svgElement;
+  }
+
+  // svg要素のstyleを設定する
+  const svgElement = await parseSvgData(svgData);
+  setSvgStyle(svgParent, svgElement);
+
+  // svg要素のクラスを配列で渡して設定する
+  svgElement.classList.add(...classNames);
+}
+
+function setSvgStyle(parent, svgElement) {
+  parent.appendChild(svgElement);
+  svgElement.setAttribute("viewBox", "0 0 20 20"); // Add this line
+  svgElement.setAttribute("width", "16");
+  svgElement.setAttribute("height", "14");
+}
+
+
+function btnClick(element) {
+  const button = document.querySelector(".Header__Icon");
+  button.addEventListener("click", function () {
+    element.setAttribute("aria-hidden", false);
+  });
+}
+
+function btnCloseClick(element, parent) {
+  const button = document.querySelector(`.${parent}`);
+  button.addEventListener("click", function () {
+    element.setAttribute("aria-hidden", true);
+  });
+}
 
 function slideSettings() {
   const flkty = flickityInit();
@@ -65,7 +128,10 @@ function slideSettings() {
   CarouselCellSettings(flkty);
 }
 
-// Flickityの初期化
+/********************************************
+ * Flickityの初期化
+ ********************************************/
+
 function flickityInit() {
   // optionsを設定する
   const options = {
@@ -108,18 +174,40 @@ function flickityInit() {
           }
         });
 
-        // セクションヘッダーの表示をスライドの進展毎に設定する
+        // セクションヘッダー（コンテンツ）の表示をスライドの進展毎に設定する
         const sectionHeaders = document.querySelectorAll(".SectionHeader");
         sectionHeaders.forEach((header, headerIndex) => {
-          if (headerIndex === index) {
-            header.style.visibility = "visible";
-            header.style.opacity = "1";
-            header.style.transform = "translateY(0)";
-          } else {
-            header.style.visibility = "hidden";
-            header.style.opacity = "0";
-            header.style.transform = "translateY(20px)";
-          }
+          setTimeout(() => {
+            console.log("index", index);
+            if (headerIndex === index) {
+              header.style.visibility = "visible";
+              header.style.opacity = "1";
+              header.style.transform = "matrix(1, 0, 0, 1, 0, 0)";
+              header.style.transition = "all 0.7s ease-in-out";
+            } else {
+              header.style.visibility = "hidden";
+              header.style.opacity = "0";
+              header.style.transform = "matrix(1, 0, 0, 1, 0, 20)";
+              header.style.transition = "all 0.7s ease-in-out";
+            }
+          }, 500);
+        });
+
+        const sectionHeaderBtns = document.querySelectorAll(".SectionHeader__ButtonWrapper");
+        sectionHeaderBtns.forEach((btn, btnIndex) => {
+          setTimeout(() => {
+            if (btnIndex === index) {
+              btn.style.visibility = "visible";
+              btn.style.opacity = "1";
+              btn.style.transform = "matrix(1, 0, 0, 1, 0, 0)";
+              btn.style.transition = "all 0.7s ease-in-out";
+            } else {
+              btn.style.visibility = "hidden";
+              btn.style.opacity = "0";
+              btn.style.transform = "matrix(1, 0, 0, 1, 0, 20)";
+              btn.style.transition = "all 0.7s ease-in-out";
+            }
+          }, 700);
         });
       },
     },
@@ -169,7 +257,6 @@ let hasRan = false;
 function CarouselCellSettings(flkty) {
   if (hasRan) return;
   hasRan = true;
-  console.log("CarouselCellSettings has run");
   const observer = new MutationObserver(function (mutations) {
     mutations.forEach(function (mutation) {
       if (mutation.type === "childList") {
@@ -213,6 +300,15 @@ function showHeader() {
   sectionHeaders[0].style.visibility = "visible";
   sectionHeaders[0].style.opacity = "1";
   sectionHeaders[0].style.transform = "matrix(1, 0, 0, 1, 0, 0)";
+  sectionHeaders[0].style.transition = "all 0.7s ease-in-out";
+
+  // 1番目から4番目のheaderを非表示にする
+  for (let i = 1; i <= 4; i++) {
+    sectionHeaders[i].style.visibility = "hidden";
+    sectionHeaders[i].style.opacity = "0";
+    sectionHeaders[i].style.transform = "matrix(1, 0, 0, 1, 0, 20)";
+    sectionHeaders[0].style.transition = "all 0.7s ease-in-out";
+  }
 }
 
 // lerp関数を作成する
@@ -332,7 +428,6 @@ function logoChildElement(logoConfig) {
 
 // a要素を取得して、a要素の親要素を取得
 function getA(h1, logoConfig) {
-  console.log(logoConfig);
   const a = document.querySelector(".Header__LogoLink");
 
   // a要素の親要素を取得
@@ -370,19 +465,31 @@ function createImg(src, alt) {
 }
 
 // ヘッダー要素ここでADDしたものをアップデートする
-function headerSettings() {
+async function headerSettings() {
   const iconConfig = isDesktopView(BREAKPOINT_WIDTH) ? TABLETANDUP : PHONE;
   addMenuBtn(iconConfig);
-  const svgPath = isDesktopView(BREAKPOINT_WIDTH) ? cartDesktopSvg : cartPhoneSvg;
-  createCart(svgPath);
+  const cartPath = isDesktopView(BREAKPOINT_WIDTH) ? cartDesktopSvg : cartPhoneSvg;
+  let svgElement;
+  try {
+    svgElement = await createSvg(cartPath);
+  } catch (error) {
+    console.error("'An error occurred while creating the SVG:", error);
+  }
+  if (svgElement) {
+    adjustSvgHeight(svgElement);
+  }
   const logoConfig = isDesktopView(BREAKPOINT_WIDTH) ? ROGO_TABLET : ROGO_PHONE;
   addLogo(logoConfig);
 }
 
+/********************************************
+ * SVGの設定
+ ********************************************/
+
 // fecth関数は開発サーバー（npm run dev）で実行するときはローカルファイルを読み込むことができますが、ビルド後の静的なHTMLファイル（npm run build）では同じ動作をしない。
 // これは、ビルド後のファイルはサーバーから提供されるため、ローカルファイルを読み込むことができないためです。
 // Change argument from path to data
-async function getSVG(data) {
+async function parseSvgData(data) {
   const parser = new DOMParser();
   const svgDoc = parser.parseFromString(data, "image/svg+xml");
   const svgElement = svgDoc.querySelector("svg");
@@ -407,40 +514,63 @@ async function getSVG(data) {
   return svgElement;
 }
 
-// Change argument from svgPath to svgData
 // SVGのデータを取得して,親span要素に追加する
-async function createCart(svgData) {
+async function createSvg(svgData) {
   try {
-    const svgParent = document.querySelector(`.${SVG_CART}`);
-    // Add error handling if no element is found
-    if (!svgParent) {
-      throw new Error(`No element found with class: ${SVG_CART}`);
-    }
-
-    clearElementChildren(svgParent);
-
-    // カートデータを取得して、svg要素を作成する
-    const svgElement = await getSVG(svgData);
-    if (!svgElement) {
-      throw new Error(`No SVG element created for path: ${svgData}`);
-    }
-    svgParent.appendChild(svgElement);
-    if (window.innerWidth >= BREAKPOINT_WIDTH) {
-      svgElement.classList.add("hidden-phone");
-    } else {
-      svgElement.classList.add("hidden-tablet-and-up");
-    }
-
-    // カートアイコンの高さを調整する
-    const cartBtn = document.querySelector(`.${BUTTON_PARENT}`);
-    const btnHeight = cartBtn.offsetHeight;
-    adjustElementToHeight(svgElement, btnHeight);
-
-    adjustElements();
+    const svgParent = findSvgParent();
+    clearSvgParent(svgParent);
+    const svgElement = await appendSvgElement(svgData, svgParent);
+    setSvgClassBasedOnWidth(svgElement);
+    return svgElement;
   } catch (error) {
-    // Add point of failure to error message
-    console.error("Error in createCart:", error);
+    console.error("Error in createSvg:", error);
   }
+}
+
+// SVG要素の親要素を見つける
+function findSvgParent() {
+  const svgParent = document.querySelector(`.${SVG_CART}`);
+  if (!svgParent) {
+    throw new Error(`No element found with class: ${SVG_CART}`);
+  }
+  return svgParent;
+}
+
+// 親要素の子要素をクリアする
+function clearSvgParent(svgParent) {
+  clearElementChildren(svgParent);
+}
+
+// SVG要素を作成し、親要素に追加する
+async function appendSvgElement(svgData, svgParent) {
+  return await createAndAppendSvgElement(svgData, svgParent);
+}
+
+// 画面の幅に基づいてSVG要素のクラスを設定する
+function setSvgClassBasedOnWidth(svgElement) {
+  if (window.innerWidth >= BREAKPOINT_WIDTH) {
+    svgElement.classList.add("hidden-phone");
+  } else {
+    svgElement.classList.add("hidden-tablet-and-up");
+  }
+}
+
+// カートアイコンの高さを調整する
+function adjustSvgHeight(svgElement) {
+  const cartBtn = document.querySelector(`.${BUTTON_PARENT}`);
+  const btnHeight = cartBtn.offsetHeight;
+  adjustElementToHeight(svgElement, btnHeight);
+  adjustElements();
+}
+
+// カートデータを取得して、svg要素を作成する
+async function createAndAppendSvgElement(svgData, parent) {
+  const svgElement = await parseSvgData(svgData);
+  if (!svgElement) {
+    throw new Error(`No SVG element created for path: ${svgData}`);
+  }
+  parent.appendChild(svgElement);
+  return svgElement;
 }
 
 /********************************************
@@ -462,14 +592,17 @@ window.addEventListener("orientationchange", function () {
   viewportSettings();
 });
 
-function handleResize() {
+async function handleResize() {
   console.log("Resize event");
   clearTimeout(resizeTimeout);
   resizeTimeout = setTimeout(async () => {
     const typeDevice = isDesktopView(BREAKPOINT_WIDTH) ? TABLETANDUP : PHONE;
     addMenuBtn(typeDevice);
-    const svgPath = isDesktopView(BREAKPOINT_WIDTH) ? cartDesktopSvg : cartPhoneSvg;
-    await createCart(svgPath);
+    const cartPath = isDesktopView(BREAKPOINT_WIDTH) ? cartDesktopSvg : cartPhoneSvg;
+    const svgElement = await createSvg(cartPath);
+    if (svgElement) {
+      adjustSvgHeight(svgElement);
+    }
 
     const logoConfig = isDesktopView(BREAKPOINT_WIDTH) ? "28px" : "18px";
     const imgElements = document.querySelectorAll(".Header__LogoImage");

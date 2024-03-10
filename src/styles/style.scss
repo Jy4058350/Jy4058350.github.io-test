@@ -1,5 +1,6 @@
 @charset "utf-8";
 @import "debug";
+@import "sidebar";
 @import "slider";
 @import "../node_modules/normalize.css";
 /**
@@ -194,6 +195,14 @@ select {
 }
 
 button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button;
+  cursor: pointer;
+}
+
+button,
 [type="button"],
 [type="reset"],
 [type="submit"] {
@@ -235,11 +244,6 @@ button:-moz-focusring,
 /*------------------------------------*\
     Grid WIDTHS 371
 \*------------------------------------*/
-
-.Icon-Wrapper--clickable {
-  position: relative;
-  background: transparent; /* This is used to increase the clickable area */
-}
 
 .Icon-Wrapper--clickable::before {
   position: absolute;
@@ -316,6 +320,11 @@ button:-moz-focusring,
   .\31\31\/12--phone {
     width: 91.66667%;
   }
+}
+
+.features--heading-normal .u-h6,
+.features--heading-normal .Rte h6 {
+  font-size: 13px;
 }
 
 /**
@@ -506,19 +515,17 @@ input.spr-button-primary::before,
   height: 15px;
 }
 
-@media screen and (min-width: 641px) {
-  .Header__Wrapper {
-    padding: 18px 30px;
-  }
-}
-
 .Header__Wrapper {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 15px 18px;
 }
-
+@media screen and (min-width: 641px) {
+  .Header__Wrapper {
+    padding: 18px 30px;
+  }
+}
 .Header__FlexItem {
   display: flex;
 }

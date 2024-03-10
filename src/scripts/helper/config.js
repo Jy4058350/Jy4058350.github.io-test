@@ -1,4 +1,12 @@
 export const config = {
+  humbergerBtnSelector: "button.Header__Icon",
+  logoeSelector: "Header__LogoImage",
+  buttonParent: "Header__FlexItem",
+  svgCart: "cart",
+  svg: {
+    cartDesktop: "cartDesktopSvg",
+    cartPhone: "cartPhoneSvg",
+  },
   page: {
     breakpoint: 769,
   },
@@ -17,14 +25,6 @@ export const config = {
     height: "25",
     rectWidth: "30",
     rectHeight: "2",
-  },
-  humbergerBtnSelector: "button.Header__Icon",
-  logoeSelector: "Header__LogoImage",
-  buttonParent: "Header__FlexItem",
-  svgCart: "cart",
-  svg: {
-    cartDesktop: "cartDesktopSvg",
-    cartPhone: "cartPhoneSvg",
   },
 
   logo: {
