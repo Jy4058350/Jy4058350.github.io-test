@@ -32,6 +32,7 @@ let scrollbar; // Declare scrollbar at the top level
 
 // export default function scrollInit(gsap, ScrollTrigger, Scrollbar) {
 export default function scrollInit() {
+  window.addEventListener("load", function () {});
   const pageContainer = document.getElementById(PAGE);
 
   // register the ScrollTrigger plugin
@@ -114,7 +115,6 @@ export default function scrollInit() {
       });
     }
     switchHeaderClass();
-
-    return { disablePlugin, enablePlugin };
   });
+  return { disablePlugin, enablePlugin };
 }

@@ -3,6 +3,91 @@
   --navigation-background: #f8f8f7;
 
   --drawer-transition-timing: cubic-bezier(0.645, 0.045, 0.355, 1);
+
+  --border-color: #e1e1db;
+  --navigation-border-color: rgba(43, 43, 43, 0.25);
+
+  --button-background: #605f5d;
+  --text-color-light: #545454;
+  --text-color-light-rgb: 84, 84, 84;
+
+  --navigation-text-color-light: rgba(43, 43, 43, 0.5);
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * Collapsible
+ * ----------------------------------------------------------------------------
+ */
+.Collapsible {
+  overflow: hidden;
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.Collapsible + .Collapsible {
+  border-top: none;
+}
+
+.SidebarMenu__Nav .Collapsible:first-child {
+  border-top: none;
+}
+
+.Collapsible__Button {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 20px 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.Collapsible__Plus {
+  position: absolute;
+  top: calc(50% - (11px / 2));
+  right: 0;
+  width: 11px;
+  height: 11px;
+}
+
+.Collapsible__Plus::before,
+.Collapsible__Plus::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  content: "";
+  background-color: currentColor;
+  transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+  transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+.Collapsible__Plus::before {
+  width: 11px;
+  height: 1px;
+  opacity: 1;
+}
+
+.Collapsible__Plus::after {
+  width: 1px;
+  height: 11px;
+}
+
+.Collapsible__Button[aria-expanded="true"] .Collapsible__Plus::before,
+.Collapsible__Button[aria-expanded="true"] .Collapsible__Plus::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.Collapsible__Button[aria-expanded="true"] .Collapsible__Plus::before {
+  opacity: 0;
+}
+
+.Collapsible .Collapsible {
+  margin-left: 16px;
+  border: none;
+}
+
+.Collapsible__Content {
+  padding-bottom: 18px;
 }
 
 /**
@@ -55,6 +140,11 @@
 
 .Drawer__Container {
   width: 100%;
+}
+
+.Drawer--fromLeft .Drawer__Container {
+  padding-right: 24px;
+  padding-left: 18px;
 }
 
 .Drawer__Header {
@@ -158,4 +248,9 @@
 .SidebarMenu .Heading,
 .supports-hover .SidebarMenu .Link--primary:hover {
   color: var(--navigation-text-color);
+}
+
+.SidebarMenu .Collapsible,
+.SidebarMenu .Linklist {
+  border-color: var(--navigation-border-color);
 }

@@ -4,8 +4,7 @@ import cartPhoneSvg from "../svg/cart_phone.js";
 import cartDesktopSvg from "../svg/cart_desktop.js";
 import closeButtonData from "../svg/closeButton.js";
 import searchButton from "../svg/searchButton.js";
-
-// import scrollInit from "../scripts/component/scroll.js";
+import scrollInit from "../scripts/component/scroll";
 
 const BREAKPOINT_WIDTH = config.page.breakpoint;
 const DEBOUNCE_TIME = config.time.debounce;
@@ -40,6 +39,149 @@ export function init() {
     slideSettings();
 
     sidebarSettings();
+
+    setScrollableElement();
+  });
+}
+/********************************************
+ * commonの設定
+ ********************************************/
+
+// Drawer__Mainの要素にスクロール可能な要素を設定する
+function setScrollableElement() {
+  const elements = document.querySelectorAll(".Drawer__Main");
+  console.log("elements", elements);
+  elements.forEach((element) => {
+    element.setAttribute("data-scrollable", "");
+    element.style.overflow = "auto";
+  });
+}
+
+/********************************************
+ * sidebarの設定(collapsible menu)
+ ********************************************/
+
+function collapsibleBtn() {
+  const collapsibles = document.querySelectorAll(".Collapsible");
+
+  collapsibles.forEach((collapsible) => {
+    if (collapsible) {
+      // collapsible.style.overflow = "hidden";
+      const button = collapsible.querySelector(".Collapsible__Button");
+      if (button) {
+        // buttonにクラスを追加する
+        button.classList.add("Heading", "u-h6");
+
+        // 追加ボタンが押された時に表示する要素を作成する
+        createInnerElement(collapsible);
+
+        // 追加ボタンの要素を作成する
+        addSpanTagForAddBtn(button);
+      } else {
+        createA(collapsible);
+      }
+    } else {
+      console.log("Collapsible not found");
+    }
+  });
+}
+
+// collapsibleにaタグを作成する
+function createA(element) {
+  const a = document.createElement("a");
+  a.classList.add("Collapsible__Button", "Heading", "Link", "Link--primary", "u-h6");
+  // collapsibleのテキストを取得して、a要素に設定する
+  const text = element.textContent;
+  a.textContent = text;
+  // href属性を設定する
+  a.setAttribute("href", "#");
+
+  // collapsibleのテキストを削除する
+  element.textContent = "";
+  // a要素をcollapsibleの子要素に追加する
+  element.appendChild(a);
+}
+
+// 追加ボタンがおされたときに表示する要素を作成する
+function createInnerElement(element) {
+  const div = document.createElement("div");
+  div.classList.add("Collapsible__Inner");
+  element.appendChild(div);
+  const content = getContentElement();
+  div.appendChild(content);
+  div.style.overflow = "hidden";
+  div.style.height = "0";
+}
+
+// Collapsible__Contentの要素を取得する
+function getContentElement() {
+  const content = document.querySelector(".Collapsible__Content");
+  return content;
+}
+
+// collapsibleに追加ボタンの要素を作成する
+function addSpanTagForAddBtn(btn) {
+  const span = document.createElement("span");
+  span.classList.add("Collapsible__Plus");
+  btn.appendChild(span);
+  const el = document.querySelector(".Collapsible__Button");
+  clickBtn(el);
+}
+
+// ボタン(inner)をクリックしたときに、必要な動作を設定する
+function clickBtn(element) {
+  const inner = document.querySelector(".Collapsible__Inner");
+
+  window.addEventListener("DOMContentLoaded", (event) => {
+    // 折り畳まれている要素とその子要素にはフォーカスを当てない
+    if (inner.style.height === "0px") {
+      addTabIndex(inner);
+    } else {
+      removeTabIndex(inner);
+    }
+  });
+
+  element.addEventListener("click", function () {
+    // const btn = element.parentElement;
+    const btn = document.querySelector(".Collapsible__Button");
+    const inner = document.querySelector(".Collapsible__Inner");
+
+    // aria-expanded属性を切り替える
+    const isExpanded = btn.getAttribute("aria-expanded") === "true";
+    btn.setAttribute("aria-expanded", !isExpanded);
+
+    // overflowとheightを切り替える
+    inner.style.overflow = inner.style.overflow === "visible" ? "hidden" : "visible";
+    inner.style.height = inner.style.height === "0px" ? "auto" : "0px";
+
+    // tabindexを切り替える
+    if (inner.getAttribute("tabindex") === "-1") {
+      removeTabIndex(inner);
+    } else {
+      addTabIndex(inner);
+    }
+    // 折りたたみが開かれたときに特定の要素にフォーカスを設定
+    if (!isExpanded) {
+      console.log("btn", btn);
+      btn.focus();
+    }
+  });
+}
+
+// tabindexをつける関数
+function addTabIndex(element) {
+  element.setAttribute("tabindex", "-1");
+  const focusableElementsInInner = element.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+  focusableElementsInInner.forEach((el) => {
+    el.setAttribute("tabindex", "-1");
+  });
+}
+// tabindexを外す関数
+function removeTabIndex(element) {
+  element.removeAttribute("tabindex");
+  const focusableElementsInInner = element.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+  focusableElementsInInner.forEach((el) => {
+    el.removeAttribute("tabindex");
   });
 }
 
@@ -50,6 +192,7 @@ export function init() {
 function sidebarSettings() {
   closeButtonInit(closeButtonData);
   searchButtonInit(searchButton);
+  collapsibleBtn();
 }
 
 // 虫眼鏡ボタンの設定をする
@@ -59,7 +202,7 @@ function searchButtonInit(svgData) {
 
 // closeボタンの設定をする
 function closeButtonInit(svgData) {
-  getSvgdata(svgData, "Drawer__Close",["Icon", "Icon--close"]);
+  getSvgdata(svgData, "Drawer__Close", ["Icon", "Icon--close"]);
   const sidebar = document.getElementById("sidebar-menu");
   // aria-hidden属性を設定する(要素をスクリーンリーダーから隠す)
   sidebar.setAttribute("aria-hidden", true);
@@ -107,18 +250,82 @@ function setSvgStyle(parent, svgElement) {
   svgElement.setAttribute("height", "14");
 }
 
+// scroll監視の切断
+function disconnectScroll() {
+  const { disablePlugin, enablePlugin } = scrollInit();
+  disablePlugin();
+}
 
+// sccroll監視の開始
+function connectScroll() {
+  const { disablePlugin, enablePlugin } = scrollInit();
+  enablePlugin();
+}
+
+let isFirstFocus = true; // フラグを初期化
+// サイドバー開閉ボタンを開いた時に、必要な動作を設定する
 function btnClick(element) {
+  // const { disablePlugin, enablePlugin } = scrollInit();
+  const html = document.querySelector("html");
+  const sidebar = document.getElementById("sidebar-menu");
+  const pageOverlay = document.querySelector(".PageOverlay");
   const button = document.querySelector(".Header__Icon");
+  const pageContainer = document.getElementById("page-container");
+
   button.addEventListener("click", function () {
     element.setAttribute("aria-hidden", false);
+    sidebar.setAttribute("tabindex", "-1"); //追加
+
+    // transitionedイベントを設定して開閉アニメーションが完了した時に特定の動作をトリガーする
+    sidebar.addEventListener("transitionend", function (event) {
+      if (event.propertyName !== "transform") return;
+      // サイドバー内の最初のフォーカス可能な要素にフォーカスを移す
+      const firstFocusableElement = sidebar.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      if (firstFocusableElement && isFirstFocus) {
+        firstFocusableElement.focus();
+        disconnectScroll(); // スクロールを切断
+        isFirstFocus = false; // フラグを更新
+
+        // pageContainer内のすべてのフォーカス可能な要素に対してtabindex="-1"を設定
+        const focusableElementsInPageContainer = pageContainer.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        focusableElementsInPageContainer.forEach((element) => {
+          element.setAttribute("tabindex", "-1");
+          console.log("Adding pageContainer tabindex=-1");
+        });
+      }
+    });
+
+    pageOverlay.classList.add("is-visible");
+    html.classList.add("no-scroll");
   });
 }
 
+// サイドバー開閉ボタンを閉じた時に、必要な動作を設定する
 function btnCloseClick(element, parent) {
+  const html = document.querySelector("html");
+  const sidebar = document.getElementById("sidebar-menu");
+  const pageOverlay = document.querySelector(".PageOverlay");
+  const pageContainer = document.getElementById("page-container");
+
   const button = document.querySelector(`.${parent}`);
   button.addEventListener("click", function () {
     element.setAttribute("aria-hidden", true);
+    sidebar.removeAttribute("tabindex"); //追加
+    pageOverlay.classList.remove("is-visible");
+    html.classList.remove("no-scroll");
+
+    // transitionedイベントを設定して開閉アニメーションが完了した時に特定の動作をトリガーする
+    sidebar.addEventListener("transitionend", function (event) {
+      if (event.propertyName !== "transform") return;
+      // pageContainer内のすべてのフォーカス可能な要素のtabindex="-1"を削除
+      const focusableElementsInPageContainer = pageContainer.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      focusableElementsInPageContainer.forEach((element) => {
+        element.removeAttribute("tabindex");
+        connectScroll(); // スクロールを開始
+      });
+      // フラグのリセットをする
+      isFirstFocus = true;
+    });
   });
 }
 

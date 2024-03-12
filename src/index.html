@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Practice btn svg</title>
+    <title>Practice sidebar scroll</title>
     <link rel="stylesheet" href="./styles/loader.scss" />
     <link rel="stylesheet" href="./styles/style.scss" />
     <link rel="stylesheet" href="./styles/flickity.min.css" />
@@ -21,6 +21,7 @@
         <span id="Loader-percent" class="Loader-percent">0%</span>
       </div>
     </div>
+    <div class="PageOverlay"></div>
     <div id="section-saidebar-menu">
       <section id="sidebar-menu" class="SidebarMenu Drawer Drawer--small Drawer--fromLeft">
         <header class="Drawer__Header">
@@ -32,18 +33,30 @@
             <div class="Drawer__Container">
               <nav class="SidebarMenu__Nav SidebarMenu__Nav--primary">
                 <div class="Collapsible">
-                  <button class="Collapsible__Button Heading u-h6">
-                    TEXT SAMPLE viewport
-                    <span class="Collapsible__Plus"></span>
-                  </button>
-                  <div class="Collapsible__Inner"></div>
+                  <button class="Collapsible__Button">TEXT SAMPLE viewport</button>
+                  <div class="Collapsible__Content">
+                    <div class="Collapsible">collapsible text</div>
+                    <div class="Collapsible">collapsible text</div>
+                    <div class="Collapsible">collapsible text</div>
+                    <div class="Collapsible">collapsible text</div>
+                    <div class="Collapsible">collapsible text</div>
+                    <div class="Collapsible">collapsible text</div>
+                  </div>
                 </div>
+                <div class="Collapsible">text test append</div>
+                <div class="Collapsible">text test append</div>
               </nav>
               <nav class="SidebarMenu__Nav SidebarMenu__Nav--secondary">
-                <a href="" class="Button Button--secondary Button--full"></a>
+                <a href="" class="Button Button--secondary Button--full">
+                  <span>ACTIONs</span>
+                </a>
               </nav>
               <nav class="SidebarMenu__Nav SidebarMenu__Nav--secondary">
-                <ul class="Linklist Linklist--spacingLoose"></ul>
+                <ul class="Linklist Linklist--spacingLoose">
+                  <li class="Linklist__Item"><a href="" class="Text--subdued Link Link--primary">Small space</a></li>
+                  <li class="Linklist__Item"><a href="" class="Text--subdued Link Link--primary">Small space</a></li>
+                  <li class="Linklist__Item"><a href="" class="Text--subdued Link Link--primary">Small space</a></li>
+                </ul>
               </nav>
             </div>
           </div>
@@ -90,14 +103,15 @@
             </div>
             <span id="section-1__slideshow-end" class="Anchor"></span>
           </section>
+          <div id="div1"></div>
         </main>
         <style>
           [data-webgl] {
             opacity: 0.3;
           }
           #div1 {
-            width: 800px;
-            height: 200px;
+            width: 100%;
+            height: 500px;
           }
           /* img {
             margin-top: 100px;
