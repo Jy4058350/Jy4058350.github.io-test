@@ -14,7 +14,7 @@ export default {
     rollupOptions: {
       input: {
         main: "./index.html",
-        // flickity: "./flickity.html",
+        flickity: "./subhtml/flickity.html",// Add entry point for the flickity page
       },
     },
   },
