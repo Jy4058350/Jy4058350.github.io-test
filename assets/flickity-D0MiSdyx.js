@@ -1,0 +1,1 @@
+import{F as e}from"./flickity-fade-oaUB-vbY.js";function o(){r(),i()}o();function i(){new e(".carousel",{wrapAround:!0,pageDots:!0,prevNextButtons:!0,fade:!0})}function r(){const t=document.title,n=document.querySelector(".AnnouncementBar__Content");return n&&(n.innerHTML=t),t}
