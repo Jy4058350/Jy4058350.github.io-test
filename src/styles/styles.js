@@ -944,16 +944,51 @@ function viewportSettings() {
 }
 
 // css変数をload時に設定する
-window.addEventListener("load", function () {
+function setCssVariables() {
   cssVariable(`#${HEADER}`, HEADER_HEIGHT);
   cssVariable(`#${ANNOUNCEMENT}`, ANNOUNCEMENT_HEIGHT);
+}
+// main高さの計算
+let resizeTimer;
+
+function debounceOtherTasks() {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    const SlideshowFull = document.querySelector(".Slideshow--fullscreen");
+    const windowHeight = window.innerHeight;
+    console.log("windowHeight", windowHeight);
+    const header = document.querySelector(".Header");
+    const headerHeight = header.offsetHeight;
+    const announcement = document.querySelector(".AnnouncementBar");
+    const announcementHeight = announcement.offsetHeight;
+    const headerIsNotTransparent = getHeaderIsNotTransparent();
+    console.log("headerIsNotTransparent", headerIsNotTransparent);
+    SlideshowFull.style.height = `${windowHeight - headerHeight * (headerIsNotTransparent === "0" ? 0 : 1) - announcementHeight}px`;
+  }, 50);
+}
+
+// css変数をload時とresize時に設定する
+window.addEventListener("load", function () {
+  setCssVariables();
+  debounceOtherTasks();
 });
+window.addEventListener("resize", function () {
+  setCssVariables();
+  debounceOtherTasks();
+});
+
+// CSS変数 --header-is-not-transparent の値を取得
+function getHeaderIsNotTransparent() {
+  let headerIsNotTransparent = getComputedStyle(document.documentElement).getPropertyValue("--header-is-not-transparent").trim();
+  return headerIsNotTransparent;
+}
 
 // get element height and set as css variable
 function cssVariable(target, property) {
   const targetEl = document.querySelector(target);
   if (targetEl) {
     const height = targetEl.offsetHeight;
+    console.log("target height", targetEl, height);
     setElementHeight(property, height);
   }
 }
