@@ -1,8 +1,18 @@
 export const config = {
   humbergerBtnSelector: "button.Header__Icon",
-  logoeSelector: "Header__LogoImage",
+  logoSelector: "Header__LogoImage",
   buttonParent: "Header__FlexItem",
   svgCart: "cart",
+
+  sidebarBtnConfig: {
+    attributes: {
+      "data-action": "close-drawer",
+      "data-drawer-id": "sidebar-cart",
+      "aria-label": "カートを閉じる",
+    },
+    classes: ["Drawer__Close", "Icon-Wrapper--clickable"],
+  },
+
   svg: {
     cartDesktop: "cartDesktopSvg",
     cartPhone: "cartPhoneSvg",
@@ -32,11 +42,6 @@ export const config = {
     black: "./logo-black.png",
     phone: "18px",
     tablet: "24px",
-  },
-
-  color: {
-    white: "#ffffff",
-    black: "#000000",
   },
 
   // root settings for slide targetに登録するのはidもしくはセマンティックタグであること

@@ -1,5 +1,5 @@
 import Flickity from "flickity-fade";
-import { config, isDesktopView } from "../scripts/helper";
+import { config, isDesktopView, createElementWithAttributes, appendChildWithClass } from "../scripts/helper";
 import cartPhoneSvg from "../svg/cart_phone.js";
 import cartDesktopSvg from "../svg/cart_desktop.js";
 import closeButtonData from "../svg/closeButton.js";
@@ -9,15 +9,14 @@ import scrollInit from "../scripts/component/scroll";
 const BREAKPOINT_WIDTH = config.page.breakpoint;
 const DEBOUNCE_TIME = config.time.debounce;
 const HUMBERGER_SELECTOR = config.humbergerBtnSelector;
-const LOGOE_SELECTOR = config.logoeSelector;
+const LOGOE_SELECTOR = config.logoSelector;
 const BUTTON_PARENT = config.buttonParent;
 const SVG_CART = config.svgCart;
 const ROGO_WHITE = config.logo.white;
 const ROGO_BLACK = config.logo.black;
 const ROGO_PHONE = config.logo.phone;
 const ROGO_TABLET = config.logo.tablet;
-const WHITE = config.color.white;
-const BLACK = config.color.black;
+
 const PAGE = config.target.pageContainer;
 const HEADER = config.target.header;
 const ANNOUNCEMENT = config.target.announcement;
@@ -43,6 +42,167 @@ export function init() {
     setScrollableElement();
   });
 }
+
+/********************************************
+ * sidebar-cartの設定(pageContainer外の要素)
+ ********************************************/
+function sidebarCartSettings() {
+  const sectionCart = document.querySelector(`[data-section-id="cart"]`);
+  sectionCart.setAttribute("aria-hidden", true);
+  sectionCart.classList.add("Drawer", "Drawer--fromRight");
+  addDivToSectionCart(sectionCart);
+  clickSidebarCart(sectionCart);
+  addFormToDiv(sectionCart);
+}
+
+// sectionCartの子要素にdiv要素を追加する
+function addDivToSectionCart(element) {
+  const div = createElementWithAttributes("div", {}, ["Drawer__Header", "Drawer__Header--bordered", "Drawer__Container"]);
+  element.appendChild(div);
+  const span = createElementWithAttributes("span", {}, ["Drawer__Title", "Heading", "u-h4"]);
+  span.textContent = "カート";
+  div.appendChild(span);
+  const div1 = createElementWithAttributes("div", {}, ["Drawer__Header", "Drawer__Header--bordered", "Drawer__Container"]);
+  addBtnToDiv(div);
+}
+
+// div子要素にbutton要素を追加する
+function addBtnToDiv(element) {
+  const btn = createElementWithAttributes("button", config.sidebarBtnConfig.attributes, config.sidebarBtnConfig.classes);
+  element.appendChild(btn);
+  addSvgToBtn(closeButtonData, btn);
+  return btn;
+}
+
+// buttonの子要素にsvg要素を追加する
+async function addSvgToBtn(svgData, element) {
+  getSvgdata1(svgData, element, ["Icon", "Icon--close"]);
+}
+
+async function getSvgdata1(svgData, parent, classNames) {
+  const svgParent = parent;
+  clearSvgParent(svgParent);
+
+  // SVGデータの解析してsvg要素作成する
+  async function parseSvgData(data) {
+    const parser = new DOMParser();
+    const svgDoc = parser.parseFromString(data, "image/svg+xml");
+    const svgElement = svgDoc.querySelector("svg");
+
+    if (!svgElement) {
+      throw new Error(`No SVG element found in the provided data: ${data}`);
+    }
+
+    const pathElements = svgElement.querySelectorAll("path");
+    pathElements.forEach((pathElement) => {
+      pathElement.setAttribute("fill", "none");
+      pathElement.setAttribute("stroke-width", "1.5"); // Add this line
+      pathElement.setAttribute("stroke", "currentColor"); // Add this line
+    });
+    return svgElement;
+  }
+
+  // svg要素のstyleを設定する
+  const svgElement = await parseSvgData(svgData);
+  setSvgStyle(svgParent, svgElement);
+
+  // svg要素のクラスを配列で渡して設定する
+  svgElement.classList.add(...classNames);
+}
+
+// div子要素にform要素を追加する
+function addFormToDiv(element) {
+  const form = createElementWithAttributes("form", {}, ["Cart", "Drawer__Content"]);
+  form.setAttribute("action", "/cart");
+  form.setAttribute("method", "post");
+  form.setAttribute("novalidate", "");
+  element.appendChild(form);
+
+  addDivToForm(form);
+}
+
+// formの子要素にdiv要素を追加する
+function addDivToForm(element) {
+  const div = createElementWithAttributes("div", {}, ["Drawer__Main"]);
+  element.appendChild(div);
+
+  addShippingNotice(div);
+  addCartEmpty(div, "カートに商品がありません");
+}
+
+// divの子要素にdiv要素を追加する
+function addShippingNotice(element) {
+  const div = appendChildWithClass(element, "div", ["Cart__ShippingNotice", "Text--subdued"]);
+  addDrawerContainer(div);
+}
+
+// divの子要素にdiv要素を追加する
+function addDrawerContainer(element) {
+  const div = appendChildWithClass(element, "div", ["Drawer__Container"]);
+  addYen(div, "あと");
+}
+
+// divの子要素にp要素を追加する
+function addCartEmpty(element, text) {
+  const p = appendChildWithClass(element, "p", ["Cart__Empty", "Heading", "u-h5"]);
+  p.textContent = text;
+}
+
+// divの子要素にp要素を追加する
+function addYen(element, text) {
+  const p = createElementWithAttributes("p", {}, []);
+  p.appendChild(document.createTextNode(text));
+
+  const span = createElementWithAttributes("span", {}, []);
+  const span1 = createElementWithAttributes("span", {}, ["yen"]);
+  span1.textContent = "¥";
+
+  span.appendChild(span1);
+  span.appendChild(document.createTextNode("10,000"));
+  p.appendChild(span);
+
+  p.appendChild(document.createTextNode("以上で送料無料"));
+  element.appendChild(p);
+}
+
+// p要素の子要素にspan要素を追加する
+function addSpanToP(element, text) {
+  const span = createElementWithAttributes("span", {}, []);
+  span.textContent = text;
+  element.appendChild(span);
+}
+
+/********************************************
+ * sidebar-cart属性のカートがクリックされた時に、必要な動作を設定する
+ ********************************************/
+function clickSidebarCart(sectionElement) {
+  const html = document.querySelector("html");
+  const pageOverlay = document.querySelector(".PageOverlay");
+  const sidebarCart = document.querySelector(`[data-drawer-id="sidebar-cart"][data-action="open-drawer"]`);
+  openSidebarCart(html, pageOverlay, sectionElement, sidebarCart);
+  closeSidebarCart(html, pageOverlay, sectionElement, sidebarCart);
+}
+
+function openSidebarCart(html, pageOverlay, sectionElement, sidebarCart) {
+  document.querySelector("a[data-drawer-id]").addEventListener("click", function (event) {
+    // cartのaタグをクリックしても、ページ遷移が発生しないようにする
+    event.preventDefault();
+    pageOverlay?.classList.toggle("is-visible");
+    html.classList.toggle("no-scroll");
+    sectionElement.setAttribute("aria-hidden", "false");
+    disconnectScroll();
+  });
+}
+function closeSidebarCart(html, pageOverlay, sectionElement, sidebarCartt) {
+  const btn = document.querySelector(`[data-action="close-drawer"][data-drawer-id="sidebar-cart"]`);
+  btn.addEventListener("click", function () {
+    sectionElement.setAttribute("aria-hidden", "true");
+    pageOverlay.classList.remove("is-visible");
+    html.classList.remove("no-scroll");
+    connectScroll();
+  });
+}
+
 /********************************************
  * commonの設定
  ********************************************/
@@ -50,7 +210,6 @@ export function init() {
 // Drawer__Mainの要素にスクロール可能な要素を設定する
 function setScrollableElement() {
   const elements = document.querySelectorAll(".Drawer__Main");
-  console.log("elements", elements);
   elements.forEach((element) => {
     element.setAttribute("data-scrollable", "");
     element.style.overflow = "auto";
@@ -193,6 +352,7 @@ function sidebarSettings() {
   closeButtonInit(closeButtonData);
   searchButtonInit(searchButton);
   collapsibleBtn();
+  sidebarCartSettings();
 }
 
 // 虫眼鏡ボタンの設定をする
@@ -734,16 +894,30 @@ async function createSvg(svgData) {
   }
 }
 
-// SVG要素の親要素を見つける
+// SVG要素の親要素であるspan要素を見つける,spanの親要素にaタグを追加、aタグの親要素にaタグを追加する
 function findSvgParent() {
   const svgParent = document.querySelector(`.${SVG_CART}`);
   if (!svgParent) {
     throw new Error(`No element found with class: ${SVG_CART}`);
   }
+  const parentElements = document.querySelectorAll(".Header__FlexItem.Header__FlexItem--fill");
+  addAtagToElement(parentElements[1], svgParent);
   return svgParent;
 }
 
-// 親要素の子要素をクリアする
+// cartのaタグを作成する
+function addAtagToElement(parentElement, svgParent) {
+  const aTag = document.createElement("a");
+  aTag.href = "/cart";
+  aTag.classList.add("Header__Icon", "Icon-Wrapper", "Icon-Wrapper--clickable");
+  aTag.setAttribute("data-drawer-id", "sidebar-cart");
+  aTag.setAttribute("data-action", "open-drawer");
+  aTag.setAttribute("aria-label", "カートを開く");
+  aTag.appendChild(svgParent);
+  parentElement.appendChild(aTag);
+}
+
+// svg要素の親要素span要素をクリアする
 function clearSvgParent(svgParent) {
   clearElementChildren(svgParent);
 }
@@ -819,7 +993,7 @@ async function handleResize() {
 
     setPinSpacerWidth();
 
-    adjustElements();
+    // adjustElements();
   }, DEBOUNCE_TIME);
 }
 
@@ -944,51 +1118,16 @@ function viewportSettings() {
 }
 
 // css変数をload時に設定する
-function setCssVariables() {
+window.addEventListener("load", function () {
   cssVariable(`#${HEADER}`, HEADER_HEIGHT);
   cssVariable(`#${ANNOUNCEMENT}`, ANNOUNCEMENT_HEIGHT);
-}
-// main高さの計算
-let resizeTimer;
-
-function debounceOtherTasks() {
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(() => {
-    const SlideshowFull = document.querySelector(".Slideshow--fullscreen");
-    const windowHeight = window.innerHeight;
-    console.log("windowHeight", windowHeight);
-    const header = document.querySelector(".Header");
-    const headerHeight = header.offsetHeight;
-    const announcement = document.querySelector(".AnnouncementBar");
-    const announcementHeight = announcement.offsetHeight;
-    const headerIsNotTransparent = getHeaderIsNotTransparent();
-    console.log("headerIsNotTransparent", headerIsNotTransparent);
-    SlideshowFull.style.height = `${windowHeight - headerHeight * (headerIsNotTransparent === "0" ? 0 : 1) - announcementHeight}px`;
-  }, 50);
-}
-
-// css変数をload時とresize時に設定する
-window.addEventListener("load", function () {
-  setCssVariables();
-  debounceOtherTasks();
 });
-window.addEventListener("resize", function () {
-  setCssVariables();
-  debounceOtherTasks();
-});
-
-// CSS変数 --header-is-not-transparent の値を取得
-function getHeaderIsNotTransparent() {
-  let headerIsNotTransparent = getComputedStyle(document.documentElement).getPropertyValue("--header-is-not-transparent").trim();
-  return headerIsNotTransparent;
-}
 
 // get element height and set as css variable
 function cssVariable(target, property) {
   const targetEl = document.querySelector(target);
   if (targetEl) {
     const height = targetEl.offsetHeight;
-    console.log("target height", targetEl, height);
     setElementHeight(property, height);
   }
 }

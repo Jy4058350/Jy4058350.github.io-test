@@ -12,6 +12,9 @@
   --text-color-light-rgb: 84, 84, 84;
 
   --navigation-text-color-light: rgba(43, 43, 43, 0.5);
+  --background: #fdfdf6;
+
+  --heading-color: #5c5c5c;
 }
 
 /**
@@ -120,6 +123,12 @@
   transform: translateX(calc(-100vw + 65px));
 }
 
+.Drawer--fromRight {
+  right: 0;
+  left: auto;
+  transform: translateX(calc(100vw - 65px));
+}
+
 @media screen and (min-width: 641px) {
   .Drawer {
     width: 400px;
@@ -217,8 +226,63 @@
   flex: 1 1 auto;
 }
 
-.Drawer--small {
-  width: 340px;
+@media screen and (min-width: 641px) {
+  .Drawer {
+    width: 400px;
+    transform: translateX(-100%);
+  }
+
+  .Drawer--small {
+    width: 340px;
+  }
+
+  .Drawer--fromRight {
+    transform: translateX(100%);
+  }
+
+  .Drawer__Header {
+    min-height: 60px;
+    max-height: 80px;
+  }
+
+  @supports (width: calc(max(100%))) {
+    .Drawer__Content {
+      /* This handles an edge case when the header is much bigger than the maximum size for content, but this only works on Safari as of today */
+      height: max(calc(100% - var(--header-height)), calc(100% - 80px));
+      max-height: max(calc(100% - var(--header-height)), calc(100% - 80px));
+    }
+  }
+
+  .Drawer__Main {
+    flex: 1 1 auto;
+  }
+
+  .Drawer--fromLeft .Drawer__Container,
+  .Drawer--fromRight .Drawer__Container {
+    padding-right: 30px;
+    padding-left: 30px;
+  }
+
+  .Drawer__Close {
+    left: 30px;
+  }
+
+  .Drawer--fromRight .Drawer__Close {
+    right: 30px;
+    left: auto;
+  }
+
+  .Drawer__Close svg {
+    stroke-width: 1.5px;
+  }
+
+  .Drawer__Header--bordered {
+    box-shadow: 0 -1px var(--border-color) inset;
+  }
+
+  .Drawer__Footer--padded {
+    padding: 24px 30px;
+  }
 }
 
 .Drawer__Search {
