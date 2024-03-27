@@ -230,13 +230,14 @@
  */
 .Slideshow--fullscreen {
   height: 100vh;
+  position: relative;
 }
 
 @supports (--css: variables) {
   .js .Slideshow--fullscreen {
     height: calc(var(--window-height) - (var(--header-height) * 0) - 0px);
     height: calc(var(--window-height) - (var(--header-height) * var(--header-is-not-transparent, 0)) - var(--announcement-bar-height, 0px));
-    max-height: 100vh;
+    max-height: 100vh !important;
   }
 }
 

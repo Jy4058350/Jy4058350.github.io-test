@@ -106,6 +106,7 @@ export default function scrollInit() {
         trigger: header,
         start: "top top",
         end: 99999,
+
         onEnter: () => {
           header.classList.remove("Header--transparent");
         },
