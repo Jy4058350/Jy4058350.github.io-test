@@ -573,7 +573,7 @@ function flickityInit() {
     autoPlay: false,
     pageDots: true,
     fade: true,
-    initialIndex: 0,
+    // initialIndex: 0,
 
     on: {
       change: function (index) {
