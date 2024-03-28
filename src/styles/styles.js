@@ -551,6 +551,8 @@ function slideSettings() {
   const flkty = flickityInit();
   dotsSettings(flkty);
   CarouselCellSettings(flkty);
+  flkty.select(4);
+  setTimeout(() => flkty.select(0), 0);
 }
 
 /********************************************
@@ -571,6 +573,8 @@ function flickityInit() {
     autoPlay: false,
     pageDots: true,
     fade: true,
+    initialIndex: 0,
+
     on: {
       change: function (index) {
         console.log("Slide changed to", index);
@@ -648,6 +652,8 @@ function flickityInit() {
 
   // カルーセルの高さを固定して、画像の高さを調整する
   elem.classList.add("Carousel--fixed");
+
+  return flkty;
 }
 
 let hasDisconnectedDots = false;
@@ -711,7 +717,7 @@ function CarouselCellSettings(flkty) {
           observer.disconnect();
           console.log("disconnected");
           addChileElementClass();
-          showHeader();
+          // showHeader();
         }
       }
     });
@@ -726,13 +732,15 @@ function showHeader() {
   sectionHeaders[0].style.opacity = "1";
   sectionHeaders[0].style.transform = "matrix(1, 0, 0, 1, 0, 0)";
   sectionHeaders[0].style.transition = "all 0.7s ease-in-out";
+  // sectionHeaders[0].style.zIndex = "100";
 
   // 1番目から4番目のheaderを非表示にする
   for (let i = 1; i <= 4; i++) {
     sectionHeaders[i].style.visibility = "hidden";
     sectionHeaders[i].style.opacity = "0";
     sectionHeaders[i].style.transform = "matrix(1, 0, 0, 1, 0, 20)";
-    sectionHeaders[0].style.transition = "all 0.7s ease-in-out";
+    sectionHeaders[i].style.transition = "all 0.7s ease-in-out";
+    // sectionHeaders[i].style.zIndex = "0";
   }
 }
 
