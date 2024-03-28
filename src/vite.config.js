@@ -14,7 +14,7 @@ export default {
     rollupOptions: {
       input: {
         main: "./index.html",
-        // flickity: "./flickity.html",
+        flickity: "./subhtml/demo-wrapAround.html",
       },
     },
   },
