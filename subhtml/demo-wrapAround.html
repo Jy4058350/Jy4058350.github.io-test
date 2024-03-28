@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html class="js" lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WrapAround</title>
+    <script type="module" crossorigin src="../assets/flickity-CIT1b9G5.js"></script>
+    <link rel="modulepreload" crossorigin href="../assets/index-BC1wpBVT.js">
+  </head>
+  <body></body>
+  <div class="AnnouncementBar__Content"></div>
+  <div class="Slideshow--fullscreen">
+    <div class="Carousel fadeIn">
+      <div class="Carousel__Cell">
+        <img src="../assets/sakuramich-C1ohoT_M.jpeg" alt="" />
+      </div>
+      <div class="Carousel__Cell">
+        <img src="../assets/yamadera-DtHNMInO.jpeg" alt="" />
+      </div>
+      <div class="Carousel__Cell">
+        <img src="../assets/sakuramich-C1ohoT_M.jpeg" alt="" />
+      </div>
+      <div class="Carousel__Cell">
+        <img src="../assets/yamadera-DtHNMInO.jpeg" alt="" />
+      </div>
+      <div class="Carousel__Cell">
+        <img src="../assets/sakuramich-C1ohoT_M.jpeg" alt="" />
+      </div>
+    </div>
+  </div>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: sans-serif;
+    }
+
+    .Slideshow--fullscreen {
+      /* 高さをだすため簡易的処理　*/
+      height: 80vh;
+    }
+
+    .Carousel {
+      background: #eee;
+      height: 100%;
+      /* カスタマイズ */
+      position: relative;
+      user-select: none;
+    }
+
+    /* カスタマイズ　fadeクラスを　Carouselに追加 */
+    .js .fadeIn .Carousel__Cell {
+      left: 0 !important;
+      visibility: hidden;
+      opacity: 0;
+    }
+
+    .Carousel__Cell {
+      width: 100%;
+      /* height: 200px; */
+      /* margin-right: 10px;
+      background: #8c8;
+      border-radius: 5px;
+      counter-increment: carousel-cell; */
+      /*  カスタマイズ　 */
+      /* opacity: 0.5; */
+    }
+
+    .js .Carousel__Cell.is-selected {
+      visibility: visible;
+      opacity: 1;
+      transition-delay: 0s;
+    }
+
+    .js .Carousel__Cell {
+      transition: none;
+    }
+
+    /* cell number */
+    /* .Carousel__Cell:before {
+      display: block;
+      text-align: center;
+      content: counter(carousel-cell);
+      line-height: 200px;
+      font-size: 80px;
+      color: white;
+    } */
+
+    /*! Flickity v3.0.0
+https://flickity.metafizzy.co
+---------------------------------------------- */
+
+    .flickity-enabled {
+      position: relative;
+    }
+
+    .flickity-enabled:focus {
+      outline: none;
+    }
+
+    .flickity-viewport {
+      overflow: hidden;
+      position: relative;
+      height: 100%;
+      touch-action: pan-y;
+      /* カスタマイズ heigh:100%をコメントアウト */
+      /* height: auto; */
+    }
+
+    .flickity-slider {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+    }
+
+    /* カスタマイズ これはsliderのtransulateXのjs制御を無効にしている。子要素は１から３までスライドしなくなる　０から１と３から４と４から１は切り替わっているように見える */
+    .js .flickity-slider {
+      transform: none !important;
+    }
+
+    .flickity-rtl .flickity-slider {
+      left: unset;
+      right: 0;
+    }
+
+    /* draggable */
+
+    .flickity-enabled.is-draggable {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    .flickity-enabled.is-draggable .flickity-viewport {
+      cursor: move;
+      cursor: grab;
+    }
+
+    .flickity-enabled.is-draggable .flickity-viewport.is-pointer-down {
+      cursor: grabbing;
+    }
+
+    /* ---- flickity-cell ---- */
+
+    /* .flickity-cell {
+      position: absolute;
+      left: 0;
+    }
+
+    .flickity-rtl .flickity-cell {
+      left: unset;
+      right: 0;
+    } */
+
+    /* ---- flickity-button ---- */
+
+    .flickity-button {
+      position: absolute;
+      background: hsl(0 0% 100% / 75%);
+      border: none;
+      color: #333;
+    }
+
+    .flickity-button:hover {
+      background: white;
+      cursor: pointer;
+    }
+
+    .flickity-button:focus {
+      outline: none;
+      box-shadow: 0 0 0 5px #19f;
+    }
+
+    .flickity-button:active {
+      opacity: 0.6;
+    }
+
+    .flickity-button:disabled {
+      opacity: 0.3;
+      cursor: auto;
+      /* prevent disabled button from capturing pointer up event. #716 */
+      pointer-events: none;
+    }
+
+    .flickity-button-icon {
+      fill: currentColor;
+    }
+
+    /* ---- previous/next buttons ---- */
+
+    .flickity-prev-next-button {
+      top: 50%;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      /* vertically center */
+      transform: translateY(-50%);
+    }
+
+    .flickity-prev-next-button.previous {
+      left: 10px;
+    }
+    .flickity-prev-next-button.next {
+      right: 10px;
+    }
+    /* right to left */
+    .flickity-rtl .flickity-prev-next-button.previous {
+      left: auto;
+      right: 10px;
+    }
+
+    .flickity-rtl .flickity-prev-next-button.next {
+      right: auto;
+      left: 10px;
+    }
+
+    .flickity-prev-next-button .flickity-button-icon {
+      position: absolute;
+      left: 20%;
+      top: 20%;
+      width: 60%;
+      height: 60%;
+    }
+
+    /* ---- page dots ---- */
+
+    .flickity-page-dots {
+      position: absolute;
+      width: 100%;
+      bottom: -25px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .flickity-rtl .flickity-page-dots {
+      direction: rtl;
+    }
+
+    .flickity-page-dot {
+      display: block;
+      width: 10px;
+      height: 10px;
+      padding: 0;
+      margin: 0 8px;
+      background: hsl(0 0% 20% / 25%);
+      border-radius: 50%;
+      cursor: pointer;
+      appearance: none;
+      border: none;
+      text-indent: -9999px;
+      overflow: hidden;
+    }
+
+    .flickity-rtl .flickity-page-dot {
+      text-indent: 9999px;
+    }
+
+    .flickity-page-dot:focus {
+      outline: none;
+      box-shadow: 0 0 0 5px #19f;
+    }
+
+    .flickity-page-dot.is-selected {
+      background: hsl(0 0% 20% / 100%);
+    }
+  </style>
+
+</html>
