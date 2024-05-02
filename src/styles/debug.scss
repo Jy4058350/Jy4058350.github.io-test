@@ -17,3 +17,54 @@
 .Header__LogoImage {
   max-width: 95% !important;
 }
+
+#section-1 {
+  position: relative;
+}
+
+#section-1 .Heading {
+  color: #ffffff !important;
+}
+
+// 暫定対応　js制御ができるまでの一時的な対応
+.AspectRatio.AspectRatio--withFallback {
+  max-width: 2048px;
+  padding-bottom: 127.1484375%;
+  --aspect-ratio: 0.7864823348694316;
+}
+
+.ProductMeta__Price .yen {
+  font-size: 70%;
+}
+
+@media screen and (max-width: 1140px) {
+  .HorizontalList__Item {
+    margin: 0;
+  }
+}
+
+// 暫定対応　js制御ができるまでの一時的な対応
+.ProductForm__Option:nth-of-type(2) .ColorSwatchList {
+  display: none;
+}
+
+.same_products {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2px;
+  margin-top: -16px;
+}
+
+.same_product {
+  display: block;
+  text-align: center;
+}
+
+.same_product-img {
+  object-fit: cover;
+  padding: 2px;
+}
+
+.flickity-page-dots .dot.is-selected {
+  opacity: 1;
+}

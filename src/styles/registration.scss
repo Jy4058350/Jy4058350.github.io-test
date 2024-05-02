@@ -1,0 +1,128 @@
+/**
+ * ----------------------------------------------------------------------------
+ * Basic form 2628
+ * ----------------------------------------------------------------------------
+ */
+.Form {
+  width: 100%;
+}
+
+.Form__Input,
+.Form__Textarea,
+.spr-form-input-text,
+.spr-form-input-email,
+.spr-form-input-textarea {
+  display: block;
+  width: 100%;
+  padding: 12px 14px;
+  line-height: normal;
+  resize: none;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 0;
+  transition: border-color 0.1s ease-in-out;
+  -webkit-appearance: none;
+}
+
+.Form__FloatingLabel {
+  position: absolute;
+  bottom: calc(100% - 8px);
+  left: 10px;
+  padding: 0 5px;
+  font-size: calc(var(--base-text-font-size) - (var(--default-text-font-size) - 12px));
+  line-height: normal;
+  color: var(--text-color-light);
+  pointer-events: none;
+  background: rgba(var(--background-rgb), 0);
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+  transform: translateY(3px);
+}
+
+.Form__Submit {
+  display: block;
+  margin-top: 20px;
+}
+
+.Form--spacingTight .Form__Item {
+  margin-bottom: 15px;
+}
+
+@media screen and (min-width: 641px) {
+  .Form__Item,
+  .Form__Alert {
+    margin-bottom: 30px;
+  }
+
+  .Form__Group {
+    display: flex;
+  }
+
+  .Form__Group > .Form__Item {
+    flex: 1;
+  }
+
+  .Form__Group > :nth-child(2) {
+    margin-left: 30px;
+  }
+
+  .Form--spacingTight .Form__Group > :nth-child(2) {
+    margin-left: 15px;
+  }
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * Form elements 2823
+ * ----------------------------------------------------------------------------
+ */
+
+.Form__Header {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * Page content 5173
+ * ----------------------------------------------------------------------------
+ */
+
+.PageContent {
+  max-width: 1000px;
+  margin: 35px auto;
+}
+
+.PageContent--fitScreen {
+  display: flex;
+  align-items: center;
+  min-height: calc(100vh - 120px);
+}
+@supports (--css: variables) {
+  .PageContent--fitScreen {
+    min-height: calc(var(--window-height) - var(--header-height) - 0px - 120px);
+    min-height: calc(var(--window-height) - var(--header-height) - var(--announcement-bar-height, 0px) - 120px);
+    /* 120px is the margin */
+  }
+}
+
+.PageContent--extraNarrow {
+  max-width: 400px;
+}
+
+@media screen and (min-width: 641px) {
+  .PageContent {
+    margin-top: 80px;
+    margin-bottom: 80px;
+  }
+  .PageContent--fitScreen {
+    min-height: calc(100vh - 160px);
+  }
+  @supports (--css: variables) {
+    .PageContent--fitScreen {
+      min-height: calc(var(--window-height) - var(--header-height) - 0px - 160px);
+      min-height: calc(var(--window-height) - var(--header-height) - var(--announcement-bar-height, 0px) - 160px);
+      /* 160px is the margin */
+    }
+  }
+}

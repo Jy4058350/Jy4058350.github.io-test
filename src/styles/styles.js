@@ -1,10 +1,10 @@
-import Flickity from "flickity-fade";
-import { config, isDesktopView, createElementWithAttributes, appendChildWithClass } from "../scripts/helper";
+import { config, sectionSidebarMenuConfig, registrationConfig, isDesktopView, createElementWithAttributes, appendChildWithClass } from "../scripts/helper";
 import cartPhoneSvg from "../svg/cart_phone.js";
-import cartDesktopSvg from "../svg/cart_desktop.js";
 import closeButtonData from "../svg/closeButton.js";
 import searchButton from "../svg/searchButton.js";
 import scrollInit from "../scripts/component/scroll";
+import { templateSettings, slideSection2, productPage, section3TestPage, registrationForm, roboResitration } from "../scripts/template/section.js";
+import { sidebarSetting } from "../scripts/template/sidebar.js";
 
 const BREAKPOINT_WIDTH = config.page.breakpoint;
 const DEBOUNCE_TIME = config.time.debounce;
@@ -24,6 +24,10 @@ const HEADER_HEIGHT = config.rootProperty.headerHeight;
 const ANNOUNCEMENT_HEIGHT = config.rootProperty.announcementHeight;
 const TABLETANDUP = config.tabletAndUp;
 const PHONE = config.phone;
+const SMALLCART = config.smallCart;
+const LARGECART = config.largeCart;
+const SMALLHEADER = config.smallHeader;
+const LARGEHEADER = config.largeHeader;
 
 // const { disablePlugin, enablePlugin } = scrollInit();
 
@@ -34,22 +38,72 @@ export function init() {
   document.addEventListener("DOMContentLoaded", async function () {
     getTitle();
     viewportSettings();
-    await headerSettings();
-    slideSettings();
-
+    headerSettings();
     sidebarSettings();
+
+    // ⭐️⭐️新しい関数を追加する⭐️⭐️
+    if (document.getElementById("section-sidebar-menu")) {
+      sidebarSetting(sectionSidebarMenuConfig);
+    }
+
+    if (document.getElementById("section-registration-form")) {
+      registrationForm();
+    }
+
+    if (document.getElementById("section-robo-registration")) {
+      roboResitration();
+    }
+
+    if (document.getElementById("section-1")) {
+      templateSettings();
+    }
+
+    if (document.getElementById(config.section.section2)) {
+      slideSection2(config);
+    }
+
+    if (document.getElementById("section-product-page")) {
+      productPage();
+    }
+
+    if (document.getElementById("section-test3")) {
+      section3TestPage();
+    }
 
     setScrollableElement();
   });
 }
 
+// <title>タグのテキストを取得する
+function getTitle() {
+  const title = document.title;
+  const announcement = document.querySelector(".AnnouncementBar__Content");
+  if (announcement) {
+    announcement.innerHTML = title;
+  }
+  return title;
+}
+
 /********************************************
  * sidebar-cartの設定(pageContainer外の要素)
  ********************************************/
+
+// リサイズイベントが発生したときに、イベントリスナーを設定する
+// window.addEventListener("resize", function () {
+//   const sidebarCart = document.querySelector(`[data-drawer-id="sidebar-cart"][data-action="open-drawer"]`);
+//   console.log("sidebarCart", sidebarCart);
+//   sidebarCart.addEventListener("click", function (event) {
+//     // cartのaタグをクリックしても、ページ遷移が発生しないようにする
+//     event.preventDefault();
+//     console.log("openSidebarCart is called", sidebarCart);
+//   });
+// });
+
 function sidebarCartSettings() {
   const sectionCart = document.querySelector(`[data-section-id="cart"]`);
   sectionCart.setAttribute("aria-hidden", true);
   sectionCart.classList.add("Drawer", "Drawer--fromRight");
+
   addDivToSectionCart(sectionCart);
   clickSidebarCart(sectionCart);
   addFormToDiv(sectionCart);
@@ -70,17 +124,23 @@ function addDivToSectionCart(element) {
 function addBtnToDiv(element) {
   const btn = createElementWithAttributes("button", config.sidebarBtnConfig.attributes, config.sidebarBtnConfig.classes);
   element.appendChild(btn);
-  addSvgToBtn(closeButtonData, btn);
+  const svg = addSvgToBtn(closeButtonData, btn, ["Icon", "Icon--close"], config.svgStyle.default);
+  // console.log("svg", svg);
   return btn;
 }
 
 // buttonの子要素にsvg要素を追加する
-async function addSvgToBtn(svgData, element) {
-  getSvgdata1(svgData, element, ["Icon", "Icon--close"]);
+export async function addSvgToBtn(svgData, element, classNames, svgStyle) {
+  const svg = getSvgdata1(svgData, element, classNames, svgStyle);
+  return svg;
 }
 
-async function getSvgdata1(svgData, parent, classNames) {
+// async function getSvgdata1(svgData, parent, classNames, strokeWidth = "1.5", stroke = "currentColor", svgStyle) {
+async function getSvgdata1(svgData, parent, classNames, svgStyle) {
+  // console.log("svgStyle", svgStyle);
   const svgParent = parent;
+  const childNodes = Array.from(svgParent.childNodes);
+  // console.log("childNodes", childNodes);
   clearSvgParent(svgParent);
 
   // SVGデータの解析してsvg要素作成する
@@ -93,20 +153,45 @@ async function getSvgdata1(svgData, parent, classNames) {
       throw new Error(`No SVG element found in the provided data: ${data}`);
     }
 
-    const pathElements = svgElement.querySelectorAll("path");
-    pathElements.forEach((pathElement) => {
-      pathElement.setAttribute("fill", "none");
-      pathElement.setAttribute("stroke-width", "1.5"); // Add this line
-      pathElement.setAttribute("stroke", "currentColor"); // Add this line
-    });
+    setPathStyle(svgElement, svgStyle);
+
     return svgElement;
   }
 
+  //保存しておいた子ノードを再度追加
+  childNodes.forEach((child) => svgParent.appendChild(child));
+
   // svg要素のstyleを設定する
   const svgElement = await parseSvgData(svgData);
-  setSvgStyle(svgParent, svgElement);
+  setSvgStyle(svgParent, svgElement, svgStyle);
 
   // svg要素のクラスを配列で渡して設定する
+  addSvgClass(svgElement, classNames);
+
+  return svgElement;
+}
+
+function setPathStyle(element, { viewBox, width, height, strokeWidth, fill }) {
+  const pathElements = element.querySelectorAll("path");
+  pathElements.forEach((pathElement) => {
+    pathElement.setAttribute("fill", fill);
+    pathElement.setAttribute("stroke-width", strokeWidth); // Add this line
+    pathElement.setAttribute("stroke", "currentColor"); // Add this line
+  });
+}
+
+function setSvgStyle(parent, svgElement, { viewBox, width, height, strokeWidth, fill }) {
+  // console.log(viewBox, width, height, strokeWidth, fill);
+  if (!parent) return;
+  parent.appendChild(svgElement);
+  svgElement.setAttribute("viewBox", viewBox); // Add this line
+  svgElement.setAttribute("width", width); // Add this line
+  svgElement.setAttribute("height", height); // Add this line
+  // svgElement.setAttribute("fill", fill); // Add this line
+}
+
+// svgElemntにclassを追加する
+function addSvgClass(svgElement, classNames) {
   svgElement.classList.add(...classNames);
 }
 
@@ -181,25 +266,83 @@ function clickSidebarCart(sectionElement) {
   const sidebarCart = document.querySelector(`[data-drawer-id="sidebar-cart"][data-action="open-drawer"]`);
   openSidebarCart(html, pageOverlay, sectionElement, sidebarCart);
   closeSidebarCart(html, pageOverlay, sectionElement, sidebarCart);
+  _overlayClick(pageOverlay, sectionElement, html, document.getElementById(PAGE));
 }
 
 function openSidebarCart(html, pageOverlay, sectionElement, sidebarCart) {
-  document.querySelector("a[data-drawer-id]").addEventListener("click", function (event) {
+  const pageContainer = document.getElementById("pageContainer");
+  // document.querySelector("a[data-drawer-id]").addEventListener("click", function (event) {
+  sidebarCart.addEventListener("click", function (event) {
     // cartのaタグをクリックしても、ページ遷移が発生しないようにする
     event.preventDefault();
-    pageOverlay?.classList.toggle("is-visible");
+    // console.log("openSidebarCart is called", sidebarCart);
+    // pageOverlay?.classList.toggle("is-visible");
     html.classList.toggle("no-scroll");
-    sectionElement.setAttribute("aria-hidden", "false");
-    disconnectScroll();
+    sectionElement.setAttribute("aria-hidden", false);
+    sectionElement.setAttribute("tabindex", "-1");
+    // disconnectScroll();
+    // transitionedイベントを設定して開閉アニメーションが完了した時に特定の動作をトリガーする
+    sectionElement.addEventListener("transitionend", function (event) {
+      if (event.propertyName !== "transform") return;
+      // サイドバー内の最初のフォーカス可能な要素にフォーカスを移す
+      const firstFocusableElement = sectionElement.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      if (firstFocusableElement && isFirstFocus) {
+        firstFocusableElement.focus();
+        disconnectScroll(); // スクロールを切断
+        isFirstFocus = false; // フラグを更新
+        console.log("pageContainer", pageContainer);
+        // pageContainer内のすべてのフォーカス可能な要素に対してtabindex="-1"を設定
+        const focusableElementsInPageContainer = pageContainer.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+
+        focusableElementsInPageContainer.forEach((element) => {
+          element.setAttribute("tabindex", "-1");
+          console.log("Adding pageContainer tabindex=-1");
+        });
+      }
+    });
   });
 }
 function closeSidebarCart(html, pageOverlay, sectionElement, sidebarCartt) {
+  const pageContainer = document.getElementById(PAGE);
   const btn = document.querySelector(`[data-action="close-drawer"][data-drawer-id="sidebar-cart"]`);
   btn.addEventListener("click", function () {
     sectionElement.setAttribute("aria-hidden", "true");
     pageOverlay.classList.remove("is-visible");
     html.classList.remove("no-scroll");
-    connectScroll();
+    // connectScroll();
+    // transitionedイベントを設定して開閉アニメーションが完了した時に特定の動作をトリガーする
+    sectionElement.addEventListener("transitionend", function (event) {
+      if (event.propertyName !== "transform") return;
+      // pageContainer内のすべてのフォーカス可能な要素のtabindex="-1"を削除
+      const focusableElementsInPageContainer = pageContainer.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      focusableElementsInPageContainer.forEach((element) => {
+        element.removeAttribute("tabindex");
+        connectScroll(); // スクロールを開始
+      });
+      // フラグのリセットをする
+      isFirstFocus = true;
+    });
+  });
+}
+
+function _overlayClick(overlay, section, html, page) {
+  console.log("overlay", overlay);
+  overlay.addEventListener("click", () => {
+    console.log("overlay click");
+    section.setAttribute("aria-hidden", "true");
+    section.removeAttribute("tabindex");
+    overlay.classList.remove("is-visible");
+    html.classList.remove("no-scroll");
+
+    section.addEventListener("transitionend", function (event) {
+      if (event.propertyName !== "transform") return;
+      const focusableElementsInPageContainer = page.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      focusableElementsInPageContainer.forEach((element) => {
+        element.removeAttribute("tabindex");
+        connectScroll();
+      });
+      isFirstFocus = true;
+    });
   });
 }
 
@@ -221,39 +364,53 @@ function setScrollableElement() {
  ********************************************/
 
 function collapsibleBtn() {
-  const collapsibles = document.querySelectorAll(".Collapsible");
+  const sideMenu = document.getElementById("sidebar-menu");
+  if (!sideMenu) return;
 
-  collapsibles.forEach((collapsible) => {
+  const collapsibles = Array.from(sideMenu.querySelectorAll(".Collapsible"));
+  let aTagCount = 0;
+
+  const collapsibleWithoutButton = collapsibles.filter((collapsible) => !collapsible.querySelector("button"));
+
+  collapsibles.forEach((collapsible, index) => {
     if (collapsible) {
-      // collapsible.style.overflow = "hidden";
       const button = collapsible.querySelector(".Collapsible__Button");
       if (button) {
         // buttonにクラスを追加する
         button.classList.add("Heading", "u-h6");
-
         // 追加ボタンが押された時に表示する要素を作成する
         createInnerElement(collapsible);
-
         // 追加ボタンの要素を作成する
         addSpanTagForAddBtn(button);
-      } else {
-        createA(collapsible);
       }
+    }
+  });
+  // configからlinks_collapsibleを配列として取得しhref属性に当て、collapsibleにaタグを作成する
+
+  collapsibleWithoutButton.forEach((collapsible, index) => {
+    if (collapsibleWithoutButton.length === config.links.collapsible.length) {
+      createA(collapsible, index);
+      aTagCount++;
+      // console.log(`Generated ${aTagCount} a tags`); // 生成されたaタグの数をログに出力
     } else {
-      console.log("Collapsible not found");
+      console.log("Collapsible is not generated");
     }
   });
 }
 
+// ボタンを含まないcollapsibleに対して処理を行う
+
 // collapsibleにaタグを作成する
-function createA(element) {
+function createA(element, index) {
   const a = document.createElement("a");
-  a.classList.add("Collapsible__Button", "Heading", "Link", "Link--primary", "u-h6");
+  a.classList.add("Collapsible__Button", "Heading", "Text--subdued", "Link", "Link--primary", "u-h7");
   // collapsibleのテキストを取得して、a要素に設定する
   const text = element.textContent;
   a.textContent = text;
   // href属性を設定する
-  a.setAttribute("href", "#");
+  // a.setAttribute("href", "#");
+  // const randomIndex = Math.floor(Math.random() * config.links.collapsible.length);
+  a.setAttribute("href", config.links.collapsible[index]);
 
   // collapsibleのテキストを削除する
   element.textContent = "";
@@ -264,6 +421,7 @@ function createA(element) {
 // 追加ボタンがおされたときに表示する要素を作成する
 function createInnerElement(element) {
   const div = document.createElement("div");
+  // console.log("div", div);
   div.classList.add("Collapsible__Inner");
   element.appendChild(div);
   const content = getContentElement();
@@ -364,8 +522,11 @@ function searchButtonInit(svgData) {
 function closeButtonInit(svgData) {
   getSvgdata(svgData, "Drawer__Close", ["Icon", "Icon--close"]);
   const sidebar = document.getElementById("sidebar-menu");
+  if (sidebar) {
+    // エラー回避のため暫定対策
+    sidebar.setAttribute("aria-hidden", true);
+  }
   // aria-hidden属性を設定する(要素をスクリーンリーダーから隠す)
-  sidebar.setAttribute("aria-hidden", true);
   // aria-hidden属性をfalseに設定する(要素をスクリーンリーダーから表示する)
   // sidebar.setAttribute("aria-hidden", false);
   btnClick(sidebar);
@@ -378,6 +539,7 @@ async function getSvgdata(svgData, parent, classNames) {
 
   // SVGデータの解析してsvg要素作成する
   async function parseSvgData(data) {
+    // console.log("data", data);
     const parser = new DOMParser();
     const svgDoc = parser.parseFromString(data, "image/svg+xml");
     const svgElement = svgDoc.querySelector("svg");
@@ -397,17 +559,12 @@ async function getSvgdata(svgData, parent, classNames) {
 
   // svg要素のstyleを設定する
   const svgElement = await parseSvgData(svgData);
-  setSvgStyle(svgParent, svgElement);
+  const configs = config.svgStyle.default;
+  // console.log("configs", configs);
+  setSvgStyle(svgParent, svgElement, config.svgStyle.default);
 
   // svg要素のクラスを配列で渡して設定する
   svgElement.classList.add(...classNames);
-}
-
-function setSvgStyle(parent, svgElement) {
-  parent.appendChild(svgElement);
-  svgElement.setAttribute("viewBox", "0 0 20 20"); // Add this line
-  svgElement.setAttribute("width", "16");
-  svgElement.setAttribute("height", "14");
 }
 
 // scroll監視の切断
@@ -430,9 +587,10 @@ function btnClick(element) {
   const sidebar = document.getElementById("sidebar-menu");
   const pageOverlay = document.querySelector(".PageOverlay");
   const button = document.querySelector(".Header__Icon");
-  const pageContainer = document.getElementById("page-container");
+  const pageContainer = document.getElementById(PAGE);
 
   button.addEventListener("click", function () {
+    if (!sidebar) return;
     element.setAttribute("aria-hidden", false);
     sidebar.setAttribute("tabindex", "-1"); //追加
 
@@ -448,6 +606,7 @@ function btnClick(element) {
 
         // pageContainer内のすべてのフォーカス可能な要素に対してtabindex="-1"を設定
         const focusableElementsInPageContainer = pageContainer.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        console.log("focusableElementsInPageContainer", focusableElementsInPageContainer);
         focusableElementsInPageContainer.forEach((element) => {
           element.setAttribute("tabindex", "-1");
           console.log("Adding pageContainer tabindex=-1");
@@ -465,9 +624,11 @@ function btnCloseClick(element, parent) {
   const html = document.querySelector("html");
   const sidebar = document.getElementById("sidebar-menu");
   const pageOverlay = document.querySelector(".PageOverlay");
-  const pageContainer = document.getElementById("page-container");
+  const pageContainer = document.getElementById("pageContainer");
+  // console.log("pageContainer", pageContainer);
 
   const button = document.querySelector(`.${parent}`);
+  if (!button) return;
   button.addEventListener("click", function () {
     element.setAttribute("aria-hidden", true);
     sidebar.removeAttribute("tabindex"); //追加
@@ -478,6 +639,7 @@ function btnCloseClick(element, parent) {
     sidebar.addEventListener("transitionend", function (event) {
       if (event.propertyName !== "transform") return;
       // pageContainer内のすべてのフォーカス可能な要素のtabindex="-1"を削除
+      console.log("pageContainer", pageContainer);
       const focusableElementsInPageContainer = pageContainer.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
       focusableElementsInPageContainer.forEach((element) => {
         element.removeAttribute("tabindex");
@@ -489,300 +651,32 @@ function btnCloseClick(element, parent) {
   });
 }
 
-function slideSettings() {
-  const flkty = flickityInit();
-  dotsSettings(flkty);
-  CarouselCellSettings(flkty);
-}
-
 /********************************************
- * Flickityの初期化
- ********************************************/
-
-function flickityInit() {
-  // optionsを設定する
-  const options = {
-    // cellAlign: "left",
-    contain: true,
-    prevNextButtons: false,
-    setGallerySize: false,
-    adaptiveHeight: false,
-    wrapAround: true,
-    dragThreshold: 15,
-    pauseAutoPlayOnHover: false,
-    autoPlay: false,
-    pageDots: true,
-    fade: true,
-    on: {
-      change: function (index) {
-        console.log("Slide changed to", index);
-        const cells = document.querySelectorAll(".Carousel__Cell");
-        cells.forEach((cell, index) => {
-          if (cell.classList.contains("is-selected")) {
-            cell.style.visibility = "inherit";
-            let startOpacity = 0;
-            let endOpacity = 1;
-            let duration = 1000; // Duration of the animation in milliseconds
-            let startTime = null;
-
-            function animate(time) {
-              if (startTime === null) startTime = time;
-              let elapsed = time - startTime;
-              let t = Math.min(elapsed / duration, 1); // Ensure t doesn't exceed 1
-              let currentOpacity = lerp(startOpacity, endOpacity, t);
-              cell.style.opacity = currentOpacity;
-              if (t < 1) requestAnimationFrame(animate); // Continue the animation if t < 1
-            }
-
-            requestAnimationFrame(animate);
-          } else {
-            cell.style.visibility = "hidden";
-            cell.style.opacity = "1";
-          }
-        });
-
-        // セクションヘッダー（コンテンツ）の表示をスライドの進展毎に設定する
-        const sectionHeaders = document.querySelectorAll(".SectionHeader");
-        sectionHeaders.forEach((header, headerIndex) => {
-          setTimeout(() => {
-            console.log("index", index);
-            if (headerIndex === index) {
-              header.style.visibility = "visible";
-              header.style.opacity = "1";
-              header.style.transform = "matrix(1, 0, 0, 1, 0, 0)";
-              header.style.transition = "all 0.7s ease-in-out";
-            } else {
-              header.style.visibility = "hidden";
-              header.style.opacity = "0";
-              header.style.transform = "matrix(1, 0, 0, 1, 0, 20)";
-              header.style.transition = "all 0.7s ease-in-out";
-            }
-          }, 500);
-        });
-
-        const sectionHeaderBtns = document.querySelectorAll(".SectionHeader__ButtonWrapper");
-        sectionHeaderBtns.forEach((btn, btnIndex) => {
-          setTimeout(() => {
-            if (btnIndex === index) {
-              btn.style.visibility = "visible";
-              btn.style.opacity = "1";
-              btn.style.transform = "matrix(1, 0, 0, 1, 0, 0)";
-              btn.style.transition = "all 0.7s ease-in-out";
-            } else {
-              btn.style.visibility = "hidden";
-              btn.style.opacity = "0";
-              btn.style.transform = "matrix(1, 0, 0, 1, 0, 20)";
-              btn.style.transition = "all 0.7s ease-in-out";
-            }
-          }, 700);
-        });
-      },
-    },
-  };
-
-  const elem = document.querySelector(".Slideshow-Carousel");
-  // optionsをJSON形式で表示する
-  const optionsStr = JSON.stringify(options, null, 2);
-  // elemのdata-flickity属性にoptionsを設定する
-  elem.setAttribute("data-flickity-config", optionsStr);
-
-  const flkty = new Flickity(elem, options);
-
-  // カルーセルの高さを固定して、画像の高さを調整する
-  elem.classList.add("Carousel--fixed");
-}
-
-let hasDisconnectedDots = false;
-
-// ページドットの要素を取得する
-function dotsSettings(flkty) {
-  // Create a MutationObserver instance　DOMの変更を監視する
-  const observer = new MutationObserver(function (mutations) {
-    mutations.forEach(function (mutation) {
-      if (mutation.type === "childList") {
-        const dots = document.querySelectorAll(".flickity-page-dots");
-
-        // Check if the dots have already been created
-        if (dots.length > 0 && dots[0].children.length > 0) return;
-
-        if (!hasDisconnectedDots && dots.length > 0) {
-          // Once we have found the dots, we can stop observing　監視を停止する
-          observer.disconnect();
-          hasDisconnectedDots = true;
-          console.log("disconnected");
-        }
-      }
-    });
-  });
-  // Start observing the document with the configured parameters
-  observer.observe(document, { childList: true, subtree: true });
-}
-
-let hasRan = false;
-
-// CarouselCellの子要素を作成する
-function CarouselCellSettings(flkty) {
-  if (hasRan) return;
-  hasRan = true;
-  const observer = new MutationObserver(function (mutations) {
-    mutations.forEach(function (mutation) {
-      if (mutation.type === "childList") {
-        const carouselCells = document.querySelectorAll(".Carousel__Cell");
-
-        // 画像のsrcを設定する
-        let srcs = ["./img/yamadera.jpeg", "./img/sakuramich.jpeg", "./img/yamadera.jpeg", "./img/yamadera.jpeg", "./img/sakuramich.jpeg"];
-        //h3とh2のテキストを設定する
-        let h3Texts = ["Text 1", "Text 2", "Text 3", "Text 4", "Text 5"];
-        let h2Texts = ["Text A", "Text B", "Text C", "Text D", "Text E"];
-
-        // srcsをループして、画像を作成、srcs配列の長さを超えた場合に配列の最初から再度参照する
-        carouselCells.forEach((cell, index) => {
-          // Check if the child elements have already been created
-          if (cell.children.length > 0) return;
-
-          let src = srcs[index % srcs.length];
-          let h3Text = h3Texts[index % h3Texts.length];
-          let h2Text = h2Texts[index % h2Texts.length];
-          createImageContainerTabletElement(cell, src);
-          createImageContainerPhoneElement(cell, src);
-          createContentElement(cell, h3Text, h2Text);
-        });
-
-        if (carouselCells.length >= srcs.length) {
-          // Once we have found the dots, we can stop observing
-          observer.disconnect();
-          console.log("disconnected");
-          addChileElementClass();
-          showHeader();
-        }
-      }
-    });
-  });
-  observer.observe(document, { childList: true, subtree: true });
-}
-
-// content要素のheaderの０番目を表示させる
-function showHeader() {
-  const sectionHeaders = document.querySelectorAll(".SectionHeader");
-  sectionHeaders[0].style.visibility = "visible";
-  sectionHeaders[0].style.opacity = "1";
-  sectionHeaders[0].style.transform = "matrix(1, 0, 0, 1, 0, 0)";
-  sectionHeaders[0].style.transition = "all 0.7s ease-in-out";
-
-  // 1番目から4番目のheaderを非表示にする
-  for (let i = 1; i <= 4; i++) {
-    sectionHeaders[i].style.visibility = "hidden";
-    sectionHeaders[i].style.opacity = "0";
-    sectionHeaders[i].style.transform = "matrix(1, 0, 0, 1, 0, 20)";
-    sectionHeaders[0].style.transition = "all 0.7s ease-in-out";
-  }
-}
-
-// lerp関数を作成する
-function lerp(start, end, t) {
-  return start * (1 - t) + end * t;
-}
-
-// Slideshow__ImageContainer hidden-tablet-and-upの子要素に<img>要素を作成する
-function createImage(div, src) {
-  const img = document.createElement("img");
-  img.alt = "yamadera";
-  img.classList.add("Slideshow__Image", "Image--lazyLoaded");
-  img.onload = function () {
-    div.appendChild(img);
-  };
-  // img.src = "./public/img/yamadera.jpeg";
-  img.src = src;
-}
-
-// Slideshow__ImageContainerのhidden-tablet-and-up子要素を作成する
-function createImageContainerTabletElement(cell, src) {
-  const div = document.createElement("div");
-  div.classList.add("Slideshow__ImageContainer", "hidden-tablet-and-up");
-  cell.appendChild(div);
-  createImage(div, src);
-}
-
-// Slideshow__ImageContainerのhidden-phone子要素を作成する
-function createImageContainerPhoneElement(cell, src) {
-  const div = document.createElement("div");
-  div.classList.add("Slideshow__ImageContainer", "hidden-phone");
-  cell.appendChild(div);
-  createImage(div, src);
-}
-
-// content要素を作成する
-function createContentElement(cell, h3Text, h2Text) {
-  const div = document.createElement("div");
-  div.classList.add("Slideshow__Content", "Slideshow__Content--bottomLeft");
-  cell.appendChild(div);
-  createHeaderSemantics(div, h3Text, h2Text);
-}
-// content要素にheadersemanticsを追加して、SectionHeaderクラスを追加する
-function createHeaderSemantics(div, h3Text, h2Text) {
-  const header = document.createElement("header");
-  header.classList.add("SectionHeader");
-  div.appendChild(header);
-  const h3 = document.createElement("h3");
-  const h2 = document.createElement("h2");
-  h3.classList.add("SectionHeader__SubHeader", "Heading", "u-h6");
-  h2.classList.add("SectionHeader__Heading", "Section__Heading--emphasize", "Heading", "u-h1");
-  h3.textContent = h3Text;
-  h2.textContent = h2Text;
-  header.appendChild(h3);
-  header.appendChild(h2);
-
-  buttonWrapper(header);
-}
-
-// buttonWrapper要素を作成する
-function buttonWrapper(header) {
-  const div = document.createElement("div");
-  div.classList.add("SectionHeader__ButtonWrapper");
-  header.appendChild(div);
-  buttonGroup(div);
-}
-
-// buttonGroup要素を作成する
-function buttonGroup(div) {
-  const div1 = document.createElement("div");
-  div1.classList.add("ButtonGroup", "ButtonGroup--spacingSmall");
-  div.appendChild(div1);
-  const a = document.createElement("a");
-  // a.href = "./subhtml/test-fade.html"
-  a.href = "./subhtml/demo-wrapAround.html";
-  a.classList.add("ButtonGroup__Item", "Button");
-  a.textContent = "READ MORE";
-  div1.appendChild(a);
-}
-
-// Carusel-Cellの要素を取得して、それぞれの子要素に対して、クラスを追加する
-function addChileElementClass() {
-  const carouselCells = document.querySelectorAll(".Carousel__Cell");
-}
-
-// <title>タグのテキストを取得する
-function getTitle() {
-  const title = document.title;
-  const announcement = document.querySelector(".AnnouncementBar__Content");
-  if (announcement) {
-    announcement.innerHTML = title;
-  }
-  return title;
-}
-
-/********************************************
- * ヘッダーの設定
+ * ヘッダーの設定と一部buildに関連している記述
  ********************************************/
 
 // rogoのimg要素を動的に作成する
 function addLogo(logoConfig) {
   logoChildElement(logoConfig);
+
+  // 現在のpagesのURLを取得する
+  const path = window.location.pathname;
+  const htmlFileName = path.substring(path.lastIndexOf("/") + 1);
+
+  // ⭐️ logoPathを表示しているpageによって変更する　（重要　buildに関連している記述）
+  // const logoBlack = path.includes("subhtml") ? "../png" + config.logo.black : "." + config.logo.black;
+  const logoBlack = path.includes("subhtml") || path.includes("php") ? "../png" + config.logo.black : "." + config.logo.black;
+  const logoWhite = path.includes("subhtml") || path.includes("php") ? "../png" + config.logo.white : "." + config.logo.white;
+  // console.log("logoBlack", logoBlack);
+
   const logs = [
-    { src: ROGO_BLACK, alt: "logo" },
-    { src: ROGO_WHITE, alt: "logo" },
+    // { src: ROGO_BLACK, alt: "logo" },
+    // { src: ROGO_WHITE, alt: "logo" },
+    { src: logoBlack, alt: "logo" },
+    { src: logoWhite, alt: "logo" },
   ];
-  logs.forEach((log) => createImg(log.src, log.alt));
+  // 🤩　この部分動いていないかもしれないです
+  logs.forEach((log) => createImg(log.src, log.alt, logoBlack));
 }
 // FlexItem--logoの子要素を作成する
 function logoChildElement(logoConfig) {
@@ -806,6 +700,10 @@ function getA(h1, logoConfig) {
   // h1要素をa要素の元の位置に挿入
   parent.appendChild(h1);
 
+  // 既存のimg要素を削除
+  const existingImages = a.querySelectorAll(".Header__LogoImage");
+  existingImages.forEach((img) => img.remove());
+
   // img要素を2つ作成する
   const img1 = document.createElement("img");
   img1.className = "Header__LogoImage Header__LogoImage--primary";
@@ -823,30 +721,24 @@ function getA(h1, logoConfig) {
 }
 
 // img要素を作成する
-function createImg(src, alt) {
+function createImg(src, alt, logoBlack) {
   // const imgElements = [document.querySelector(".Header__LogoImage--primary"), document.querySelector(".Header__LogoImage--transparent")];
-  const imgElement = document.querySelector(`.Header__LogoImage--${src === ROGO_BLACK ? "primary" : "transparent"}`);
+  const imgElement = document.querySelector(`.Header__LogoImage--${src === ROGO_BLACK || src === logoBlack ? "primary" : "transparent"}`);
   // 上記書き直しました
   imgElement.src = src;
+  // console.log("src", src);
   imgElement.alt = alt;
 }
 
 // ヘッダー要素ここでADDしたものをアップデートする
-async function headerSettings() {
+function headerSettings() {
   const iconConfig = isDesktopView(BREAKPOINT_WIDTH) ? TABLETANDUP : PHONE;
   addMenuBtn(iconConfig);
-  const cartPath = isDesktopView(BREAKPOINT_WIDTH) ? cartDesktopSvg : cartPhoneSvg;
-  let svgElement;
-  try {
-    svgElement = await createSvg(cartPath);
-  } catch (error) {
-    console.error("'An error occurred while creating the SVG:", error);
-  }
-  if (svgElement) {
-    adjustSvgHeight(svgElement);
-  }
+
   const logoConfig = isDesktopView(BREAKPOINT_WIDTH) ? ROGO_TABLET : ROGO_PHONE;
   addLogo(logoConfig);
+
+  addCartAtag();
 }
 
 /********************************************
@@ -881,13 +773,120 @@ async function parseSvgData(data) {
   return svgElement;
 }
 
+/********************************************
+ * cart(header)の設定
+ ********************************************/
+function addCartAtag() {
+  const headerFlexItems = document.querySelectorAll(".Header__FlexItem.Header__FlexItem--fill");
+  clearElementChildren(headerFlexItems[1]);
+  const a = createElementWithAttributes("a", config.cartAtagConfig.attributes, config.cartAtagConfig.classes);
+  headerFlexItems[1].appendChild(a);
+
+  const spanHiddenPhone = appendChildWithClass(a, "span", ["hidden-phone"]);
+
+  addSvgToSpan(cartPhoneSvg, spanHiddenPhone, ["Icon", "Icon--cart-desktop"], "1.0");
+
+  // 新しいaタグ要素に対してclickイベントリスナーを設定
+  a.addEventListener("click", function (event) {
+    const pageContainer = document.getElementById(PAGE);
+    const sectionCart = document.querySelector(`[data-section-id="cart"]`);
+    const html = document.querySelector("html");
+    const pageOverlay = document.querySelector(".PageOverlay");
+    const sidebarCart = document.querySelector(`[data-drawer-id="sidebar-cart"][data-action="open-drawer"]`);
+
+    event.preventDefault();
+    console.log("openSidebarCart is called test");
+    // console.log("openSidebarCart is called", a);
+    pageOverlay?.classList.toggle("is-visible");
+    html.classList.toggle("no-scroll");
+    sectionCart.setAttribute("aria-hidden", false);
+    sectionCart.setAttribute("tabindex", "-1");
+    // disconnectScroll();
+    // transitionedイベントを設定して開閉アニメーションが完了した時に特定の動作をトリガーする
+    sectionCart.addEventListener("transitionend", function (event) {
+      if (event.propertyName !== "transform") return;
+      // サイドバー内の最初のフォーカス可能な要素にフォーカスを移す
+      const firstFocusableElement = sectionCart.querySelector('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      if (firstFocusableElement && isFirstFocus) {
+        firstFocusableElement.focus();
+        disconnectScroll(); // スクロールを切断
+        isFirstFocus = false; // フラグを更新
+
+        // pageContainer内のすべてのフォーカス可能な要素に対してtabindex="-1"を設定
+        const focusableElementsInPageContainer = pageContainer.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        focusableElementsInPageContainer.forEach((element) => {
+          element.setAttribute("tabindex", "-1");
+          console.log("Adding pageContainer tabindex=-1");
+        });
+      }
+    });
+  });
+  return a;
+}
+
+// a要素の高さとsvg要素の高さを調整する
+
+// spanの子要素にsvg要素を追加する
+async function addSvgToSpan(svgData, span, classNamees, strokeWidth) {
+  const svgElement = getSvgCart(svgData, span, classNamees, strokeWidth);
+}
+
+async function getSvgCart(svgData, parent, classNames, strokeWidth = "1.0", stroke = "currentColor") {
+  const svgParent = parent;
+  clearSvgParent(svgParent);
+
+  // SVGデータの解析してsvg要素作成する
+  async function parseSvgData(data) {
+    const parser = new DOMParser();
+    const svgDoc = parser.parseFromString(data, "image/svg+xml");
+    const svgElement = svgDoc.querySelector("svg");
+
+    if (!svgElement) {
+      throw new Error(`No SVG element found in the provided data: ${data}`);
+    }
+
+    const pathElements = svgElement.querySelectorAll("path");
+    pathElements.forEach((pathElement) => {
+      pathElement.setAttribute("fill", "none");
+      pathElement.setAttribute("stroke-width", strokeWidth); // Add this line
+      pathElement.setAttribute("stroke", "currentColor"); // Add this line
+    });
+    return svgElement;
+  }
+
+  // svg要素のstyleを設定する
+  const svgElement = await parseSvgData(svgData);
+  setCartSvgStyle(svgParent, svgElement);
+
+  // svg要素のクラスを配列で渡して設定する
+  addSvgClass(svgElement, classNames);
+}
+
+function setCartSvgStyle(parent, svgElement) {
+  const inConfig = isDesktopView(BREAKPOINT_WIDTH) ? LARGECART : SMALLCART;
+  // console.log("inConfig", inConfig.width);
+
+  parent.appendChild(svgElement);
+  svgElement.setAttribute("viewBox", "0 0 20 20"); // Add this line
+  svgElement.setAttribute("width", inConfig.width);
+  svgElement.setAttribute("height", inConfig.height);
+  svgElement.setAttribute("strokeWidth", inConfig.strokeWidth);
+
+  parent.style.width = inConfig.width;
+  parent.style.height = inConfig.height;
+  svgElement.style.width = inConfig.width;
+  svgElement.style.height = inConfig.height;
+}
+
 // SVGのデータを取得して,親span要素に追加する
 async function createSvg(svgData) {
   try {
-    const svgParent = findSvgParent();
-    clearSvgParent(svgParent);
-    const svgElement = await appendSvgElement(svgData, svgParent);
-    setSvgClassBasedOnWidth(svgElement);
+    //   const svgParent = findSvgParent();
+    //   clearSvgParent(svgParent);
+    //  console.log("svgParent", svgParent);
+    // const svgElement = await appendSvgElement(svgData, svgParent);
+    const svgElement = await appendSvgElement(svgData);
+    // setSvgClassBasedOnWidth(svgElement);
     return svgElement;
   } catch (error) {
     console.error("Error in createSvg:", error);
@@ -923,8 +922,10 @@ function clearSvgParent(svgParent) {
 }
 
 // SVG要素を作成し、親要素に追加する
-async function appendSvgElement(svgData, svgParent) {
-  return await createAndAppendSvgElement(svgData, svgParent);
+// async function appendSvgElement(svgData, svgParent) {
+async function appendSvgElement(svgData) {
+  // return await createAndAppendSvgElement(svgData, svgParent);
+  return await createAndAppendSvgElement(svgData);
 }
 
 // 画面の幅に基づいてSVG要素のクラスを設定する
@@ -945,12 +946,13 @@ function adjustSvgHeight(svgElement) {
 }
 
 // カートデータを取得して、svg要素を作成する
-async function createAndAppendSvgElement(svgData, parent) {
+// async function createAndAppendSvgElement(svgData, parent) {
+async function createAndAppendSvgElement(svgData) {
   const svgElement = await parseSvgData(svgData);
   if (!svgElement) {
     throw new Error(`No SVG element created for path: ${svgData}`);
   }
-  parent.appendChild(svgElement);
+  // parent.appendChild(svgElement);
   return svgElement;
 }
 
@@ -958,32 +960,28 @@ async function createAndAppendSvgElement(svgData, parent) {
  * リサイズの設定
  ********************************************/
 
-// Add event listener to window resize
 let resizeTimeout;
 
-window.addEventListener("resize", function () {
-  console.log("Window resized");
-  handleResize();
+window.addEventListener("resize", async function () {
+  headerSettings();
   viewportSettings();
+  // adjustContainer();
+  handleResize();
 });
 
-window.addEventListener("orientationchange", function () {
-  console.log("Orientation changed");
-  handleResize();
+window.addEventListener("orientationchange", async function () {
+  headerSettings();
   viewportSettings();
+  // adjustContainer();
+  handleResize();
 });
 
-async function handleResize() {
-  console.log("Resize event");
+function handleResize() {
   clearTimeout(resizeTimeout);
-  resizeTimeout = setTimeout(async () => {
+  resizeTimeout = setTimeout(() => {
     const typeDevice = isDesktopView(BREAKPOINT_WIDTH) ? TABLETANDUP : PHONE;
     addMenuBtn(typeDevice);
-    const cartPath = isDesktopView(BREAKPOINT_WIDTH) ? cartDesktopSvg : cartPhoneSvg;
-    const svgElement = await createSvg(cartPath);
-    if (svgElement) {
-      adjustSvgHeight(svgElement);
-    }
+    addCartAtag();
 
     const logoConfig = isDesktopView(BREAKPOINT_WIDTH) ? "28px" : "18px";
     const imgElements = document.querySelectorAll(".Header__LogoImage");
@@ -991,33 +989,51 @@ async function handleResize() {
       imgElement.style.height = logoConfig;
     });
 
-    setPinSpacerWidth();
+    setHeaderWidth();
 
-    // adjustElements();
+    cssVariable(`#${HEADER}`, HEADER_HEIGHT);
+    cssVariable(`#${ANNOUNCEMENT}`, ANNOUNCEMENT_HEIGHT);
   }, DEBOUNCE_TIME);
 }
 
 // pinSpacerの幅を設定する
-function setPinSpacerWidth() {
+function setHeaderWidth() {
+  let gap;
   const pinSpacer = document.querySelector(".pin-spacer");
   const header = document.getElementById(HEADER);
-  if (pinSpacer) {
-    const width = document.documentElement.clientWidth;
-    console.log("width", width);
-    pinSpacer.style.width = width + "px";
-    pinSpacer.style.maxWidth = width + "px";
-    header.style.width = width + "px";
-    header.style.maxWidth = width + "px";
-  }
+  const headerWrapper = document.querySelector(".Header__Wrapper");
+  const fullscreen = document.querySelector(".Slideshow--fullscreen");
+  const width = document.documentElement.clientWidth;
+  const height = headerWrapper.offsetHeight;
+  header.style.width = width + "px";
+  header.style.maxWidth = width + "px";
+  header.style.height = height + "px";
+  header.style.maxHeight = height + "px";
+  pinSpacer.style.width = width + "px";
+  pinSpacer.style.maxWidth = width + "px";
+  pinSpacer.style.height = height + "px";
+  pinSpacer.style.maxHeight = height + "px";
+
+  if (!fullscreen) return;
+  fullscreen.style.top = "";
+
+  gap = adjustFullscreenTop(fullscreen);
+
+  fullscreen.style.top = -gap + "px";
 }
 
-if (window.screen && window.screen.orientation) {
-  window.screen.orientation.addEventListener("change", function () {
-    console.log("Screen orientation changed:", window.screen.orientation.type);
-  });
+// fullscreenのtopの位置を調整する
+function adjustFullscreenTop(el) {
+  const rect = el.getBoundingClientRect();
+  const top = rect.top;
+  const announcementHeight = document.querySelector(".AnnouncementBar").offsetHeight;
+  const gap = top - announcementHeight;
+  return gap;
 }
 
 function clearElementChildren(element) {
+  if (!element) return; //エラー回避のため暫定的に追加
+
   while (element.firstChild) {
     element.removeChild(element.firstChild);
   }
@@ -1056,57 +1072,85 @@ function addMenuBtn(typeDevice) {
   const btn = document.querySelector(HUMBERGER_SELECTOR);
   clearElementChildren(btn);
 
-  const phoneSvg = createHumbergerIcon(typeDevice);
+  // const phoneSvg = createHumbergerIcon(typeDevice);
   const tabletAndUpSvg = createHumbergerIcon(typeDevice);
 
-  btn.appendChild(phoneSvg);
+  // btn.appendChild(phoneSvg);
   btn.appendChild(tabletAndUpSvg);
-  tabletAndUpSvg.style.display = "none";
+  // tabletAndUpSvg.style.display = "none";
 }
 // 親要素の高さと幅を調整する
 function adjustParentSize(element, newWidth, newHeight) {
   if (!element) return;
   const parent = element.parentNode;
+  console.log("width", newWidth);
+  console.log("height", newHeight);
+  console.log("parent", parent);
   parent.style.height = `${newHeight}px`;
-  parent.style.width = `${newWidth}px`;
+  // parent.style.width = `${newWidth}px`;
+  parent.style.width = `${newHeight}px`;
 }
 
 function adjustElementSize(element, newWidth, newHeight) {
+  // console.log("element", element);
+
   element.style.width = `${newWidth}px`;
   element.style.height = `${newHeight}px`;
 }
 
 // アイコンの高さに合わせて、アイコンの高さを調整する
 function adjustElementToHeight(element, targetHeight) {
+  // console.log("element", element);
+
   if (!element) {
+    // if (!firstChild) {
     console.log("No element provided to adjustElementToHeight");
     return;
   }
   if (element instanceof SVGSVGElement) {
-    // console.log("is svg", element);
     const bbox = element.getBBox();
     const aspectRatio = bbox.width / bbox.height;
     const newWidth = aspectRatio * targetHeight;
     adjustElementSize(element, newWidth, targetHeight);
   } else {
-    // console.log("is not svg", element);
+    console.log("is not svg", element);
     const aspectRatio = element.offsetWidth / element.offsetHeight;
     const newWidth = aspectRatio * targetHeight;
     adjustElementSize(element, newWidth, targetHeight);
   }
 }
 
+// 要素が取得できるまで待機する関数
+async function waitForElement(selector, timeout = 3000) {
+  const start = Date.now();
+  while (Date.now() - start < timeout) {
+    const element = document.querySelector(selector);
+    if (element) return element;
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  throw new Error(`Element not found: ${selector}`);
+}
+
 // ボタンの高さに合わせて、アイコンの高さを調整する
-function adjustElements() {
+async function adjustElements() {
   const btnParent = document.querySelector(`.${BUTTON_PARENT}`);
   const btnParentHeight = btnParent.offsetHeight;
 
   // logだけは高さを固定しました。
   const logos = document.querySelectorAll(`.${LOGOE_SELECTOR}`);
 
-  const cartParent = document.querySelector(`.${SVG_CART}`);
-  adjustElementToHeight(cartParent, btnParentHeight);
-  adjustParentSize(cartParent, cartParent.offsetWidth, btnParentHeight);
+  // const cartParent = document.querySelector(`.${SVG_CART}`);
+
+  // const cartParent = await waitForElement(".hidden-tablet-and-up");
+  // const cartParent1 = await waitForElement(".hidden-phone");
+  // const svgElement = await waitForElement(".Icon--cart");
+  // const svgElement1 = await waitForElement(".Icon--cart-desktop");
+
+  // adjustParentSize(cartParent, cartParent.offsetWidth, btnParentHeight);
+  // adjustParentSize(cartParent1, cartParent1.offsetWidth, btnParentHeight);
+
+  // adjustParentSize(svgElement, cartParent.offsetWidth, btnParentHeight);
+  // adjustParentSize(svgElement1, cartParent.offsetWidth, btnParentHeight);
 }
 
 // ウィンドウの高さを取得して、ページの高さを設定する
@@ -1116,6 +1160,10 @@ function viewportSettings() {
   if (pageContainer) pageContainer.style.height = `${viewportHeight}px`;
   setElementHeight("--window-height", viewportHeight);
 }
+
+/********************************************
+ * 画面の設定
+ ********************************************/
 
 // css変数をload時に設定する
 window.addEventListener("load", function () {
@@ -1128,6 +1176,8 @@ function cssVariable(target, property) {
   const targetEl = document.querySelector(target);
   if (targetEl) {
     const height = targetEl.offsetHeight;
+    // console.log("height", height);
+
     setElementHeight(property, height);
   }
 }
@@ -1137,23 +1187,28 @@ function setElementHeight(property, value) {
 }
 
 // loadするときにセクション合計の高さを取得するためのadjustContainer関数を実行
-window.addEventListener("load", adjustContainer);
+// window.addEventListener("load", adjustContainer);
 
 // すべてのセクションの高さを合計して、	ScrollTrigger.createでトリガーを作成する
 let totalHeight = 0;
 function adjustContainer() {
   const allElements = document.body.getElementsByTagName("*");
+  // console.log("allElements", allElements);
   const sectionElements = Array.from(allElements).filter((el) => el.id.includes("section"));
+  // console.log("sectionElements", sectionElements);
   totalHeight = 0;
   sectionElements.forEach((el) => {
-    // console.log("Height of section", el.id, ":", el.offsetHeight);
+    // console.log("Height of section:  ", el.id, ":", el.offsetHeight);
     totalHeight += el.offsetHeight;
   });
+  // console.log("Total height of all sections:", totalHeight);
+  return totalHeight;
 }
 
 // scroll.jsにtotalHeightを渡す
 export const dimensions = {
   get totalHeight() {
+    adjustContainer();
     return totalHeight;
   },
 };

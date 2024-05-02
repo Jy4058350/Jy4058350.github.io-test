@@ -1,0 +1,33 @@
+
+/**
+ * ----------------------------------------------------------------------------
+ * Shopify CAPTCHA 4494
+ * ----------------------------------------------------------------------------
+ */
+
+//  .shopify-challenge__container {
+ .challenge__container {
+    margin-top: 80px;
+    margin-bottom: 80px;
+    text-align: center;
+  }
+
+
+//   .shopify-challenge__container .shopify-challenge__button {
+  .challenge__container .shopify-challenge__button {
+    position: relative;
+    display: inline-block;
+    padding: 14px 28px;
+    font-family: var(--heading-font-family);
+    font-size: calc(var(--base-text-font-size) - (var(--default-text-font-size) - 12px));
+    font-style: var(--heading-font-style);
+    font-weight: var(--heading-font-weight);
+    line-height: normal;
+    color: var(--button-text-color);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    background: var(--button-background);
+    border: 1px solid transparent;
+    border-radius: 0;
+  }
