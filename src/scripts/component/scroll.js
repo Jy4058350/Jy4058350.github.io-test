@@ -74,6 +74,9 @@ export default function scrollInit() {
   // Add a listener to the 'scroll' event of the custom scrollbar
   scrollbar.addListener((status) => {
     // console.log("status.offset.y:", status.offset.y);
+    const pos = status.offset.y;
+    // console.log("pos:", pos);
+
     // console.log("scrollbar.scrollHeight:", scrollbar.getSize().content.height);
     if (status.offset.y + window.innerHeight >= scrollbar.getSize().content.height) {
       console.log("you're at the bottom of the page");
@@ -84,9 +87,10 @@ export default function scrollInit() {
   // headerをtotalHightの値を受け取ってその分を固定する
   window.addEventListener("load", function () {
     const height = dimensions.totalHeight;
+    // console.log("height:", height);
     // cling header headerのz-indexを変更して、pinを使って固定する
     const header = document.querySelector(`#${config.target.header}`);
-    header.style.position = "relative";
+    // header.style.position = "relative";
     header.style.zIndex = "1000";
     ScrollTrigger.create({
       trigger: header,
@@ -117,5 +121,6 @@ export default function scrollInit() {
     }
     switchHeaderClass();
   });
-  return { disablePlugin, enablePlugin };
+  // console.log("scrollbar:", scrollbar);
+  return { scrollbar, disablePlugin, enablePlugin };
 }

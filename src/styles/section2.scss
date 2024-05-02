@@ -1,0 +1,459 @@
+/*
+   This fixes an issue in IE10/11 when using min-height in flex children
+   @info: https://github.com/philipwalton/flexbugs#3-min-height-on-a-flex-container-wont-apply-to-its-flex-items
+*/
+.FlexboxIeFix {
+  display: flex;
+  flex-direction: row;
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * Page header 4883
+ * ----------------------------------------------------------------------------
+ */
+
+.PageHeader {
+  position: relative;
+  margin: 35px 0;
+}
+
+.PageHeader--withBackground {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 450px;
+  margin: 0;
+  overflow: hidden;
+  color: #ffffff;
+  background-size: cover;
+}
+
+.PageHeader--withBackground .Heading,
+.PageHeader--withBackground .Rte a:not(.Button) {
+  color: #ffffff;
+  -webkit-text-decoration-color: #ffffff;
+  text-decoration-color: #ffffff;
+}
+
+.PageHeader__ImageWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-position: center center;
+  background-size: cover;
+}
+@supports (--css: variables) {
+  .PageHeader__ImageWrapper {
+    top: calc(-1 * 0px - 0px * 0);
+    top: calc(-1 * var(--announcement-bar-height, 0px) - var(--header-height, 0px) * var(--use-unsticky-header, 0));
+    height: calc(100% + 0px + 0px * 0);
+    height: calc(100% + var(--announcement-bar-height, 0px) + var(--header-height, 0px) * var(--use-unsticky-header, 0));
+  }
+}
+
+.PageHeader .SectionHeader__Heading,
+.PageHeader .SectionHeader__Description {
+  margin-top: 0 !important;
+}
+
+.PageHeader .Alert {
+  margin-top: 22px;
+}
+
+.PageHeader__Back {
+  display: inline-block;
+  margin-bottom: 25px;
+}
+.PageHeader__Back svg {
+  height: 9px;
+  margin-right: 12px;
+  vertical-align: baseline;
+  vertical-align: initial;
+}
+
+/* Double selector is just to increase specificity and avoid !important */
+.PageHeader--withBackground .SectionHeader.SectionHeader {
+  position: relative;
+  padding: 60px 0 80px 0;
+}
+@supports (--css: variables) {
+  .PageHeader--withBackground .SectionHeader.SectionHeader {
+    margin-top: calc(var(--header-height) * 0);
+    margin-top: calc(var(--header-height) * var(--header-is-transparent, 0));
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .PageHeader .SectionHeader__Heading {
+    margin-bottom: 10px;
+  }
+}
+@media screen and (min-width: 641px) {
+  .PageHeader {
+    margin: 50px 0;
+  }
+
+  .PageHeader--withBackground {
+    min-height: 450px;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  @supports (--css: variables) {
+    .PageHeader--withBackground {
+      min-height: calc(380px + var(--header-height) * 0);
+      min-height: calc(380px + var(--header-height) * var(--header-is-transparent, 0));
+    }
+  }
+
+  .PageHeader--small.PageHeader--withBackground {
+    min-height: 420px;
+  }
+  @supports (--css: variables) {
+    .PageHeader--small.PageHeader--withBackground {
+      min-height: calc(350px + var(--header-height) * 0);
+      min-height: calc(350px + var(--header-height) * var(--header-is-transparent, 0));
+    }
+  }
+
+  .PageHeader--large.PageHeader--withBackground {
+    min-height: 480px;
+  }
+  @supports (--css: variables) {
+    .PageHeader--large.PageHeader--withBackground {
+      min-height: calc(410px + var(--header-height) * 0);
+      min-height: calc(410px + var(--header-height) * var(--header-is-transparent, 0));
+    }
+  }
+
+  .PageHeader--withBackground .SectionHeader.SectionHeader {
+    padding: 40px 0;
+    margin-top: 50px;
+  }
+  @supports (--css: variables) {
+    .PageHeader--withBackground .SectionHeader.SectionHeader {
+      margin-top: calc(var(--header-height) * 0);
+      margin-top: calc(var(--header-height) * var(--header-is-transparent, 0));
+    }
+  }
+}
+@media screen and (min-width: 1140px) {
+  .PageHeader--withBackground {
+    min-height: 550px;
+  }
+  @supports (--css: variables) {
+    .PageHeader--withBackground {
+      min-height: calc(450px + var(--header-height) * 0);
+      min-height: calc(450px + var(--header-height) * var(--header-is-transparent, 0));
+    }
+  }
+
+  .PageHeader--small.PageHeader--withBackground {
+    min-height: 500px;
+  }
+  @supports (--css: variables) {
+    .PageHeader--small.PageHeader--withBackground {
+      min-height: calc(400px + var(--header-height) * 0);
+      min-height: calc(400px + var(--header-height) * var(--header-is-transparent, 0));
+    }
+  }
+
+  .PageHeader--large.PageHeader--withBackground {
+    min-height: 620px;
+  }
+  @supports (--css: variables) {
+    .PageHeader--large.PageHeader--withBackground {
+      min-height: calc(520px + var(--header-height) * 0);
+      min-height: calc(520px + var(--header-height) * var(--header-is-transparent, 0));
+    }
+  }
+}
+@media screen and (min-width: 1800px) {
+  .PageHeader--withBackground {
+    min-height: 650px;
+  }
+  @supports (--css: variables) {
+    .PageHeader--withBackground {
+      min-height: calc(600px + var(--header-height) * 0);
+      min-height: calc(600px + var(--header-height) * var(--header-is-transparent, 0));
+    }
+  }
+
+  .PageHeader--small.PageHeader--withBackground {
+    min-height: 600px;
+  }
+  @supports (--css: variables) {
+    .PageHeader--small.PageHeader--withBackground {
+      min-height: calc(550px + var(--header-height) * 0);
+      min-height: calc(550px + var(--header-height) * var(--header-is-transparent, 0));
+    }
+  }
+
+  .PageHeader--large.PageHeader--withBackground {
+    min-height: 700px;
+  }
+  @supports (--css: variables) {
+    .PageHeader--large.PageHeader--withBackground {
+      min-height: calc(650px + var(--header-height) * 0);
+      min-height: calc(650px + var(--header-height) * var(--header-is-transparent, 0));
+    }
+  }
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * Collection toolbar 7039
+ * ----------------------------------------------------------------------------
+ */
+
+.CollectionToolbar {
+  position: sticky;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  background: var(--background);
+  box-shadow: 1px 1px var(--border-color), -1px -1px var(--border-color);
+}
+
+/* .CollectionToolbar--top {
+    top: var(--header-base-height);
+  } */
+
+@supports (--css: variables) {
+  .CollectionToolbar--top {
+    top: calc(var(--header-height) * 0);
+    top: calc(var(--header-height) * var(--use-sticky-header, 0));
+  }
+}
+
+.supports-sticky .CollectionToolbar--bottom {
+  bottom: 0; /* as of today the best polyfill I've found does not support polyfilling sticky on bottom. As a consequence on those old
+                  browsers, the stickiness is always at the top */
+}
+
+.CollectionToolbar__Group {
+  display: flex;
+  flex: 1 0 auto;
+}
+
+.CollectionToolbar__Item {
+  flex: 1 0 auto;
+  padding: 13px 0;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  border-left: 1px solid var(--border-color);
+  transition: background 0.2s ease-in-out;
+}
+
+.CollectionToolbar__Item--sort .Icon--select-arrow {
+  height: 6px;
+  margin-left: 2px;
+  pointer-events: none;
+}
+
+.CollectionToolbar__Item--layout {
+  flex: none;
+  width: 95px;
+  line-height: 1;
+  cursor: auto;
+  cursor: initial;
+}
+
+.CollectionToolbar__LayoutType {
+  margin: 0 6px;
+  opacity: 0.2;
+  transition: opacity 0.25s ease-in-out;
+}
+
+.CollectionToolbar__LayoutType svg {
+  width: 18px;
+  height: 18px;
+}
+
+.CollectionToolbar__LayoutType.is-active {
+  opacity: 1;
+}
+
+@media screen and (max-width: 640px) {
+  .CollectionToolbar__Item:first-child {
+    border-left: none;
+  }
+}
+
+@media screen and (min-width: 641px) {
+  .CollectionToolbar--reverse,
+  .CollectionToolbar__Group {
+    flex-direction: row-reverse;
+  }
+
+  .CollectionToolbar__Group {
+    flex: none;
+  }
+
+  .CollectionToolbar__Item {
+    padding: 18px 0;
+  }
+
+  .CollectionToolbar__Group .CollectionToolbar__Item {
+    padding-right: 45px;
+    padding-left: 45px;
+  }
+
+  .CollectionToolbar__Item--layout {
+    width: 115px;
+    white-space: nowrap;
+    border-right: 1px solid var(--border-color);
+    border-left: none;
+  }
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * Collection filters 7148
+ * ----------------------------------------------------------------------------
+ */
+
+.CollectionFilters .Collapsible:first-child {
+  border-top: none;
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * Product item 7168
+ * ----------------------------------------------------------------------------
+ */
+
+.ProductItem {
+  text-align: center;
+  white-space: normal;
+}
+
+.ProductItem__Wrapper {
+  position: relative;
+}
+
+.ProductItem__ImageWrapper {
+  display: block;
+}
+
+.ProductItem__Image--alternate {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0 !important;
+  -o-object-fit: cover;
+  object-fit: cover;
+  -o-object-position: center;
+  object-position: center;
+}
+
+
+/**
+ * ----------------------------------------------------------------------------
+ * Product grid 7343
+ * ----------------------------------------------------------------------------
+ */
+
+.CollectionInner {
+  margin-top: 24px;
+}
+
+.ProductList--removeMargin {
+  margin-bottom: -35px !important;
+}
+
+@media screen and (min-width: 641px) {
+  .CollectionInner {
+    margin-top: 50px;
+  }
+
+  .ProductList--grid {
+    padding: 0 24px !important;
+    margin-left: -24px !important;
+  }
+
+  .ProductList--removeMargin {
+    margin-bottom: -50px !important;
+  }
+
+  .ProductList--grid > .Grid__Cell {
+    padding-left: 24px;
+    margin-bottom: 50px;
+  }
+}
+
+@media screen and (min-width: 1008px) {
+  .CollectionInner {
+    display: flex;
+  }
+
+  .CollectionInner__Sidebar {
+    position: sticky;
+    top: 200px;
+    flex: none;
+    align-self: flex-start;
+    width: 200px;
+    padding-bottom: 50px;
+    margin: 0 16px 0 24px;
+  }
+
+  @supports (--css: variables) {
+    .CollectionInner__Sidebar {
+      top: calc(var(--header-height) + 50px);
+    }
+  }
+
+  @supports (--css: variables) {
+    .CollectionInner__Sidebar--withTopToolbar {
+      top: calc(var(--header-height) * 0 + 105px);
+      top: calc(var(--header-height) * var(--use-sticky-header, 0) + 105px);
+    }
+  }
+
+  .CollectionInner__Products {
+    flex: 1 0 0;
+  }
+
+  .CollectionInner__Sidebar .Collapsible {
+    padding: 0;
+  }
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * Product carousel 7473
+ * ----------------------------------------------------------------------------
+ */
+
+@media screen and (max-width: 1007px) {
+  /* On phone and tablet we do not use the carousel but instead use a free scroll, which offers better performance */
+  .ProductListWrapper {
+    overflow: hidden;
+  }
+
+  .ProductList--carousel {
+    padding-bottom: 30px; /* This is a trick to hide the scrollbar on iOS */
+    margin-bottom: -30px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ProductList--carousel .Carousel__Cell {
+    display: inline-block !important;
+  }
+
+  .ProductList--carousel .Carousel__Cell:first-child {
+    margin-left: 19%; /* This is (100% - 62%) / 2, where 62% is the width of a single cell */
+  }
+  .ProductList--carousel .Carousel__Cell:last-child {
+    margin-right: 19%; /* This is (100% - 62%) / 2, where 62% is the width of a single cell */
+  }
+}

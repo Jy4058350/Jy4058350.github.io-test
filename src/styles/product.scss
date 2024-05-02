@@ -1,0 +1,355 @@
+/**
+ * ----------------------------------------------------------------------------
+ * Product (general) 9038
+ * ----------------------------------------------------------------------------
+ */
+
+.Product {
+  position: relative;
+  max-width: 1330px;
+  margin: 0 auto 50px auto;
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * Product gallery 9082
+ * ----------------------------------------------------------------------------
+ */
+
+.Product__Gallery {
+  position: relative;
+  margin-bottom: 28px;
+}
+
+.Product__SlideItem {
+  position: relative;
+}
+
+.Product__SlideshowNav {
+  display: none;
+}
+
+.Product__SlideshowMobileNav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 24px 0 24px;
+}
+
+.Product__SlideshowMobileNav .flickity-page-dots {
+  display: inline-block;
+  width: auto;
+  margin-top: 0;
+}
+
+.Product__SlideshowMobileNav .dot {
+  vertical-align: middle;
+}
+
+.Product__SlideshowNavArrow {
+  position: relative;
+  /* This is used to increase the clickable area */
+}
+.Product__SlideshowNavArrow::before {
+  position: absolute;
+  top: -18px;
+  right: -18px;
+  bottom: -18px;
+  left: -18px;
+  content: "";
+  transform: translateZ(0);
+  /* Needed to avoid a glitch on iOS */
+}
+
+.Product__SlideshowNavArrow svg {
+  display: block;
+  width: 6px;
+  height: 9px;
+}
+
+.Product__SlideshowNavArrow--previous {
+  margin-right: 24px;
+}
+.Product__SlideshowNavArrow--next {
+  margin-left: 24px;
+}
+
+@media screen and (min-width: 641px) {
+  .Product {
+    margin-bottom: 80px;
+  }
+}
+
+@media screen and (min-width: 641px) {
+  .Product__Gallery {
+    margin-bottom: 65px;
+  }
+}
+
+@media screen and (min-width: 1008px) {
+  .Product__Gallery {
+    margin-top: 50px;
+    margin-left: 50px;
+  }
+
+  .Product__SlideshowNav--dots {
+    display: block;
+  }
+
+  .Product__SlideItem {
+    display: block !important;
+  }
+
+  .Product__Slideshow--zoomable .Product__SlideItem--image {
+    cursor: var(--cursor-zoom-in-svg) 18 18, zoom-in;
+    cursor: -webkit-image-set(var(--cursor-zoom-in-svg) 1x, var(--cursor-zoom-in-2x-svg) 2x), zoom-in;
+  }
+
+  /* Dots */
+  .Product__SlideshowNav--dots .Product__SlideshowNavScroller {
+    position: sticky;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  @supports (--css: variables) {
+    .Product__SlideshowNav--dots .Product__SlideshowNavScroller {
+      top: calc(50% + (var(--header-height) / 2));
+    }
+  }
+
+  .Product__SlideshowNavDot {
+    display: block;
+    width: 10px;
+    height: 10px;
+    background: transparent;
+    border: 2px solid var(--border-color);
+    border-radius: 100%;
+    transition: all 0.2s ease-in-out;
+  }
+  .Product__SlideshowNavDot:not(:last-child) {
+    margin-bottom: 12px;
+  }
+
+  .Product__SlideshowNavDot.is-selected {
+    background: var(--heading-color);
+    border-color: var(--heading-color);
+  }
+
+  /* Thumbnails */
+  .Product__SlideshowNavImage {
+    position: relative;
+    display: block;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s ease-in-out;
+  }
+  .Product__SlideshowNavImage:not(:last-child) {
+    margin-bottom: 18px;
+  }
+
+  .Product__SlideshowNavImage.is-selected {
+    border-color: var(--heading-color);
+  }
+
+  .Product__SlideshowNavPlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: #ffffff;
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.2));
+    transform: translate(-50%, -50%);
+  }
+  .Product__SlideshowNavPlay svg {
+    width: 30px;
+    height: 30px;
+    transition: transform 0.2s ease-in-out;
+  }
+
+  /* When the gallery is stack we have various adjusments to do */
+  .Product__Gallery--stack {
+    /* On desktop we use a different apparition effect than fade in if images are stacked */
+    /* Thumbnails */
+  }
+  .Product__Gallery--stack .Product__SlideshowNav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    height: 100%;
+  }
+  .Product__Gallery--stack .Product__SlideshowNav--dots {
+    left: -30px;
+  }
+  .Product__Gallery--stack .Product__Slideshow::after {
+    content: "";
+    /* Disable Flickity */
+  }
+  .Product__Gallery--stack .Product__Slideshow .Image--fadeIn {
+    opacity: 0;
+    transition: transform 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform: translateY(50px);
+  }
+  .Product__Gallery--stack .Product__Slideshow .Image--lazyLoaded.Image--fadeIn {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .Product__Gallery--stack .Product__SlideItem {
+    margin-bottom: 30px;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  .Product__Gallery--stack .Product__SlideItem:last-child {
+    margin-bottom: 0;
+  }
+  .Product__Gallery--stack .Product__SlideshowNav--thumbnails {
+    position: sticky;
+    top: var(--header-base-height);
+    width: 70px;
+    padding: 0 0 50px 0;
+    margin-bottom: -50px;
+  }
+  @supports (--css: variables) {
+    .Product__Gallery--stack .Product__SlideshowNav--thumbnails {
+      top: calc(var(--header-height) + 25px);
+    }
+  }
+}
+@media screen and (min-width: 1140px) {
+  .Product__Gallery {
+    margin-bottom: 80px;
+  }
+
+  .Product__Slideshow {
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .Product__Gallery--withThumbnails .Product__SlideshowNav--dots {
+    display: none;
+  }
+  .Product__Gallery--withThumbnails .Product__SlideshowNav--thumbnails {
+    display: block;
+  }
+
+  .Product__Gallery--stack.Product__Gallery--withThumbnails {
+    display: flex;
+  }
+  .Product__Gallery--stack.Product__Gallery--withThumbnails .Product__Slideshow,
+  .Product__Gallery--stack.Product__Gallery--withThumbnails .Product__SlideshowNav {
+    flex: 1 0 auto;
+  }
+  .Product__Gallery--stack.Product__Gallery--withThumbnails .Product__SlideshowNav {
+    flex-grow: 0;
+  }
+  .Product__Gallery--stack.Product__Gallery--withThumbnails .Product__Slideshow {
+    padding-left: 50px;
+  }
+
+  .Product__Gallery:not(.Product__Gallery--stack).Product__Gallery--withThumbnails .Product__SlideshowNav {
+    margin: 10px -10px -10px -10px;
+    text-align: center;
+  }
+  .Product__Gallery:not(.Product__Gallery--stack).Product__Gallery--withThumbnails .Product__SlideshowNavImage {
+    display: inline-block;
+    width: 70px;
+    margin: 10px;
+    vertical-align: top;
+  }
+  .Product__Gallery:not(.Product__Gallery--stack).Product__Gallery--withThumbnails .flickity-page-dots {
+    display: none;
+  }
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * Product aside and info 9376
+ * ----------------------------------------------------------------------------
+ */
+
+.Product__Info,
+.Product__Aside {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+@media screen and (min-width: 641px) {
+  .Product__Info .Container {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .Product__Aside .Section {
+    max-width: 630px;
+    margin: 0 auto;
+  }
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * Product meta and info　9592
+ * ----------------------------------------------------------------------------
+ */
+.ProductMeta {
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.ProductMeta__PriceList {
+  margin-top: 15px;
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * Product form 9729
+ * ----------------------------------------------------------------------------
+ */
+
+.ProductForm__Variants {
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+.ProductForm__Option {
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.ProductForm__Option--labelled {
+  margin-bottom: 20px;
+}
+
+.ProductForm__Label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.ProductForm__SelectedValue {
+  display: inline-block;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+.ProductForm__QuantitySelector {
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
+/**
+ * ----------------------------------------------------------------------------
+ * Product tabs 9855
+ * ----------------------------------------------------------------------------
+ */
+.Product__Tabs {
+  margin: 50px 0;
+}
+
+@media screen and (max-width: 1007px) {
+  .Product__Tabs .Collapsible {
+    padding: 0 24px;
+  }
+}
