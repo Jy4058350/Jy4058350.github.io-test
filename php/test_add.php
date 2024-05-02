@@ -24,7 +24,7 @@
     スタッフ追加<br>
     <br>
     <form method="post" action="test_add_check.php">
-        スタッフ姓を入力してください。<br>
+        スタッフ名を入力してください。<br>
         <input type="text" name="name" style="width:200px"><br>
         パスワードを入力してください。<br>
         <input type="password" name="pass" style="width:100px"><br>
